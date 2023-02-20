@@ -6,3 +6,152 @@ datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
+
+model Seller {
+  id          Int       @id @default(autoincrement())
+  userId      String    @map("user_id") @unique  @db.VarChar(40)
+  password    String    @db.VarChar(100)
+
+  ceoName     String    @map("ceo_name") @db.VarChar(100)
+  companyName String    @map("company_name") @db.VarChar(100)
+
+  createdAt   DateTime  @map("created_at") @default(now()) 
+  updatedAt   DateTime  @map("updated_at") @default(now())  @updatedAt
+  deletedAt   DateTime? @map("deleted_at")
+
+  Products Product[]
+
+  @@map("seller")
+}
+
+model Buyer {
+  id          Int       @id @default(autoincrement())
+  userId      String    @map("user_id") @unique @db.VarChar(40)
+  password    String    @db.VarChar(100)
+
+  nickName    String    @map("nick_name") @db.VarChar(100)
+  email       String    @unique @db.VarChar(100)
+  phoneNumber String    @map("phone_number") @unique @db.VarChar(100)
+
+  createdAt   DateTime  @map("created_at") @default(now()) 
+  updatedAt   DateTime  @map("updated_at") @default(now()) @updatedAt
+  deletedAt   DateTime? @map("deleted_at")
+
+  Reviews     Review[]
+  Carts       Cart[]
+  OrderHistories OrderHistory[]
+
+  @@map("buyer")
+}
+
+model Review {
+  id          Int       @id @default(autoincrement())
+  star        Float     
+  content     String    @db.Text
+
+  productId   Int       @map("product_id")
+  buyerId     Int       @map("buyer_id")
+  parentId    Int?      @map("parent_id")
+
+  createdAt   DateTime  @default(now()) @map("created_at")
+  updatedAt   DateTime  @default(now()) @map("updated_at") @updatedAt
+  deletedAt   DateTime? @map("deleted_at")
+
+  Product     Product   @relation(fields: [productId], references: [id])
+  Buyer       Buyer     @relation(fields: [buyerId], references: [id])  
+  
+  @@map("review")
+}
+
+model Product {
+  id          Int       @id @default(autoincrement())
+  name        String    @db.VarChar(100)
+  code        String    @db.VarChar(100)
+  description String    @db.VarChar(100)
+  information String    @db.VarChar(100)
+  quantity    Int    
+  cost        Int    
+  is_sale     Boolean    
+
+  sellerId    Int      @map("seller_id")
+
+  createdAt   DateTime  @default(now()) @map("created_at")
+  updatedAt   DateTime  @default(now()) @map("updated_at") @updatedAt
+  deletedAt   DateTime? @map("deleted_at")
+
+  Reviews     Review[]
+  Carts       Cart[]
+  Seller      Seller    @relation(fields: [sellerId], references: [id])
+
+  @@map("product")
+}
+
+model ProductPolicy {
+  id          Int       @id @default(autoincrement())
+  type        String    @db.VarChar(100)
+  policy      String    @db.VarChar(100)
+  
+  productId   Int       @map("product_id")
+
+  createdAt   DateTime  @default(now()) @map("created_at")
+  updatedAt   DateTime  @default(now()) @map("updated_at") @updatedAt
+  deletedAt   DateTime? @map("deleted_at")
+
+  @@map("product_policy")
+}
+
+model Cart {
+  id          Int       @id @default(autoincrement())
+  productQuantity  Int  @map("ProductQuantity")
+  status      String    @db.VarChar(100)
+  
+  buyerId     Int       @map("buyer_id")
+  productId   Int       @map("product_id")
+
+  createdAt   DateTime  @default(now()) @map("created_at")
+  updatedAt   DateTime  @default(now()) @map("updated_at") @updatedAt
+  deletedAt   DateTime? @map("deleted_at")
+
+  Buyer       Buyer     @relation(fields: [buyerId], references: [id])
+  Product     Product   @relation(fields: [productId], references: [id])
+
+  @@map("cart")
+}
+
+model OrderHistory {
+  id          Int       @id @default(autoincrement())
+  orderCode   String    @map("order_code") @unique @db.VarChar(100)
+  
+  buyerId     Int       @map("buyer_id")
+
+  createdAt   DateTime  @default(now()) @map("created_at")
+  updatedAt   DateTime  @default(now()) @map("updated_at") @updatedAt
+  deletedAt   DateTime? @map("deleted_at")
+
+  Buyer       Buyer    @relation(fields: [buyerId], references: [id])
+  OrderProduct OrderProduct[]
+
+  @@map("order_history")
+}
+
+model OrderProduct {
+  id          Int       @id @default(autoincrement())
+  code        String    @db.VarChar(100)
+  cost        Int    
+  name        String    @db.VarChar(100)
+  description String    @db.VarChar(100)
+  information String    @db.VarChar(100)
+  quantity    Int
+  status      String    @db.VarChar(100)
+
+  orderHistoryId Int    @map("order_history_id")
+
+  createdAt   DateTime  @default(now()) @map("created_at")
+  updatedAt   DateTime  @default(now()) @map("updated_at") @updatedAt
+  deletedAt   DateTime? @map("deleted_at")
+
+  OrderHistory       OrderHistory    @relation(fields: [orderHistoryId], references: [id])
+
+  @@map("order_product")
+}
+
