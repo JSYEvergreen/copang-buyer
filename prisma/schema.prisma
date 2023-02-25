@@ -102,7 +102,7 @@ model ProductPolicy {
 
 model Cart {
   id          Int       @id @default(autoincrement())
-  productQuantity  Int  @map("ProductQuantity")
+  productQuantity  Int  @map("product_quantity")
   status      String    @db.VarChar(100)
   
   buyerId     Int       @map("buyer_id")
