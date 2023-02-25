@@ -1,9 +1,7 @@
-export interface Buyer {
-  id: number;
+export interface BuyerSignUpOut {
   userId: string;
   password: string;
   nickName: string;
   email: string;
   phoneNumber: string;
-  deletedAt: Date | null;
 }
