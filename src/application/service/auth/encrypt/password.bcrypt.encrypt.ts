@@ -1,9 +1,9 @@
 import { Injectable } from '@nestjs/common';
-import { IPasswordEncryptor } from '../../../../domain/service/auth/encrypt/password.encrypt';
+import { IPasswordEncrypt } from '../../../../domain/service/auth/encrypt/password.encrypt';
 import * as bcrypt from 'bcrypt';
 
 @Injectable()
-export class PasswordBcryptEncrypt implements IPasswordEncryptor {
+export class PasswordBcryptEncrypt implements IPasswordEncrypt {
   async encrypt(rawPassword: string): Promise<string> {
     const salt = await PasswordBcryptEncrypt.generateSalt();
     return await bcrypt.hash(rawPassword, salt);
