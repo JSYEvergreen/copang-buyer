@@ -1,7 +1,6 @@
-export interface Buyer {
+export class BuyerSignUpRes {
   id: number;
   userId: string;
-  password: string;
   nickName: string;
   email: string;
   phoneNumber: string;
