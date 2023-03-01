@@ -5,3 +5,8 @@ export interface BuyerSignUpIn {
   email: string;
   phoneNumber: string;
 }
+
+export interface BuyerLoginIn {
+  userId: string;
+  password: string;
+}

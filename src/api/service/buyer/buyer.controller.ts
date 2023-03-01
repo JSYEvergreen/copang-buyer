@@ -1,8 +1,8 @@
 import { Body, Controller, Inject, Post, UseInterceptors } from '@nestjs/common';
-import { BuyerSignUpReq } from './buyer.req.dto';
+import { BuyerLoginReq, BuyerSignUpReq } from './buyer.req.dto';
 import { TransformInterceptor } from '../../common/transform.interceptor';
 import { IBuyerService } from '../../../domain/service/buyer/buyer.service';
-import { BuyerSignUpRes } from './buyer.res.dto';
+import { BuyerLoginRes, BuyerSignUpRes } from './buyer.res.dto';
 
 @Controller()
 @UseInterceptors(TransformInterceptor)
@@ -22,5 +22,16 @@ export class BuyerController {
       deletedAt: response.deletedAt,
     };
     return signUpResponse;
+  }
+
+  @Post('/buyer/login')
+  async login(@Body() loginReq: BuyerLoginReq) {
+    const response = await this.buyerService.login(loginReq);
+
+    const loginResponse: BuyerLoginRes = {
+      accessToken: response.accessToken,
+      refreshToken: response.refreshToken,
+    };
+    return loginResponse;
   }
 }

@@ -17,3 +17,11 @@ export class BuyerSignUpReq {
   @IsNotEmpty()
   phoneNumber: string;
 }
+
+export class BuyerLoginReq {
+  @IsNotEmpty()
+  userId: string;
+
+  @IsNotEmpty()
+  password: string;
+}

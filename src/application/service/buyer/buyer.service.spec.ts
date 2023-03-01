@@ -3,16 +3,27 @@ import { IBuyerService } from '../../../domain/service/buyer/buyer.service';
 import { IPasswordEncrypt } from '../../../domain/service/auth/encrypt/password.encrypt';
 import { IBuyerRepository } from '../../../domain/service/buyer/buyer.repository';
 import { Buyer } from '../../../domain/service/buyer/buyer';
-import { mock, MockProxy } from 'jest-mock-extended';
+import { mock, MockProxy, mockReset } from 'jest-mock-extended';
+import { ILoginToken, OneLoginToken } from '../../../domain/service/auth/token/login.token';
+import { BuyerLoginIn } from '../../../domain/service/buyer/port/buyer.in';
+import { CoPangException, EXCEPTION_STATUS } from '../../../domain/common/exception';
 
 describe('Buyer Service test  ', () => {
   const buyerRepository: MockProxy<IBuyerRepository> = mock<IBuyerRepository>();
   const passwordEncrypt: MockProxy<IPasswordEncrypt> = mock<IPasswordEncrypt>();
-  const sut: IBuyerService = new BuyerService(buyerRepository, passwordEncrypt); // System Under Test
+  const loginToken: MockProxy<ILoginToken> = mock<ILoginToken>();
+  const sut: IBuyerService = new BuyerService(buyerRepository, passwordEncrypt, loginToken); // System Under Test
 
   // test password And password Encrypt
   const testPassword = 'copang1234!';
   const testEncryptPassword = '$2b$08$4JWdHG8SyP2kI1CusmpYr.zSI7QxWK7k.gl26D.i4IHHANVzqmkHa';
+
+  // mock clear
+  beforeEach(() => {
+    mockReset(buyerRepository);
+    mockReset(passwordEncrypt);
+    mockReset(loginToken);
+  });
 
   describe('구매자 회원가입 테스트', () => {
     test('구매자의 회원가입이 phoneNumber 가 표현식에 맞게 표현되며 암호화가 정상적으로 수행되어 성공한 사례', async () => {
@@ -41,7 +52,122 @@ describe('Buyer Service test  ', () => {
       expect(passwordEncrypt.encrypt).toHaveBeenCalledWith(willSignUpBuyer.password);
       expect(result.phoneNumber).toEqual(expect.not.stringContaining(' '));
       expect(result.phoneNumber).toEqual(expect.not.stringContaining('-'));
-      expect(1).toEqual(1);
+    });
+  });
+
+  describe('구매자 아이디 패스워드로 토큰을 받아오는 로그인 테스트', () => {
+    test('구매자의 아이디, 비밀번호로 로그인 성공 ', async () => {
+      const givenBuyer: Buyer = {
+        id: 1,
+        userId: 'copang',
+        password: testEncryptPassword,
+        nickName: '코팡구매',
+        email: 'copang@naver.com',
+        phoneNumber: '01012345678',
+        deletedAt: null,
+      };
+
+      const givenToken: OneLoginToken = {
+        accessToken: {
+          value: 'accessToken',
+          expiredAt: new Date(),
+        },
+        refreshToken: {
+          value: 'refreshToken',
+          expiredAt: new Date(),
+        },
+      };
+
+      const willLoginBuyer: BuyerLoginIn = {
+        userId: 'copang',
+        password: testPassword,
+      };
+
+      const buyerRepositorySpy = jest.spyOn(buyerRepository, 'findOne').mockResolvedValue(givenBuyer);
+      passwordEncrypt.compare.calledWith(willLoginBuyer.password, givenBuyer.password).mockResolvedValue(true);
+      const loginTokenSpy = jest.spyOn(loginToken, 'getOne').mockReturnValue(givenToken);
+
+      const result = await sut.login(willLoginBuyer);
+
+      expect(buyerRepositorySpy).toHaveBeenCalled();
+      expect(passwordEncrypt.compare).toHaveBeenCalledWith(willLoginBuyer.password, givenBuyer.password);
+      expect(loginTokenSpy).toHaveBeenCalled();
+      expect(result).toHaveProperty('accessToken');
+      expect(result).toHaveProperty('refreshToken');
+    });
+
+    test('구매자가 탈퇴된 계정으로 로그인 시도를 하여 실패한 경우', async () => {
+      const givenBuyerDeleted: Buyer = {
+        id: 1,
+        userId: 'copang',
+        password: testEncryptPassword,
+        nickName: '코팡구매',
+        email: 'copang@naver.com',
+        phoneNumber: '01012345678',
+        deletedAt: new Date(),
+      };
+
+      const willLoginBuyer: BuyerLoginIn = {
+        userId: 'copang',
+        password: testPassword,
+      };
+      const buyerRepositorySpy = jest.spyOn(buyerRepository, 'findOne').mockResolvedValue(givenBuyerDeleted);
+
+      await expect(async () => await sut.login(willLoginBuyer)).rejects.toThrow(new CoPangException(EXCEPTION_STATUS.USER_DELETED));
+      expect(buyerRepositorySpy).toHaveBeenCalled();
+      expect(passwordEncrypt.compare).not.toHaveBeenCalled();
+      expect(loginToken.getOne).not.toHaveBeenCalled();
+    });
+
+    test('입력된 구매자의 아이디가 존재하지 않아 실패한 경우', async () => {
+      const givenBuyerNotExist = null;
+
+      const willLoginBuyer: BuyerLoginIn = {
+        userId: 'copang',
+        password: testPassword,
+      };
+      const buyerRepositorySpy = jest.spyOn(buyerRepository, 'findOne').mockResolvedValue(givenBuyerNotExist);
+
+      await expect(async () => await sut.login(willLoginBuyer)).rejects.toThrow(new CoPangException(EXCEPTION_STATUS.USER_NOT_EXIST));
+      expect(buyerRepositorySpy).toHaveBeenCalled();
+      expect(passwordEncrypt.compare).not.toHaveBeenCalled();
+      expect(loginToken.getOne).not.toHaveBeenCalled();
+    });
+
+    test('구매자의 아이디, 비밀번호중 비밀번호가 일치하지 않아 실패 한 경우', async () => {
+      const givenBuyer: Buyer = {
+        id: 1,
+        userId: 'copang',
+        password: testEncryptPassword,
+        nickName: '코팡구매',
+        email: 'copang@naver.com',
+        phoneNumber: '01012345678',
+        deletedAt: null,
+      };
+
+      const givenToken: OneLoginToken = {
+        accessToken: {
+          value: 'accessToken',
+          expiredAt: new Date(),
+        },
+        refreshToken: {
+          value: 'refreshToken',
+          expiredAt: new Date(),
+        },
+      };
+
+      const willLoginBuyer: BuyerLoginIn = {
+        userId: 'copang',
+        password: testPassword,
+      };
+
+      const buyerRepositorySpy = jest.spyOn(buyerRepository, 'findOne').mockResolvedValue(givenBuyer);
+      passwordEncrypt.compare.calledWith(willLoginBuyer.password, givenBuyer.password).mockResolvedValue(false);
+
+      await expect(async () => await sut.login(willLoginBuyer)).rejects.toThrow(new CoPangException(EXCEPTION_STATUS.USER_PASSWORD_NOT_MATCH));
+      expect(buyerRepositorySpy).toHaveBeenCalled();
+      expect(passwordEncrypt.compare).toHaveBeenCalledWith(willLoginBuyer.password, givenBuyer.password);
+      expect(loginToken.getOne).not.toHaveBeenCalled();
     });
   });
 });
