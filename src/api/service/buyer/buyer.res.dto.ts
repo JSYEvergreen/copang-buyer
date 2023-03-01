@@ -1,3 +1,5 @@
+import { Token } from '../../../domain/service/auth/token/token';
+
 export class BuyerSignUpRes {
   id: number;
   userId: string;
@@ -5,4 +7,9 @@ export class BuyerSignUpRes {
   email: string;
   phoneNumber: string;
   deletedAt: Date | null;
+}
+
+export class BuyerLoginRes {
+  accessToken: Token;
+  refreshToken: Token;
 }
