@@ -202,4 +202,38 @@ describe('Buyer Service test  ', () => {
       expect(() => sut.loginByToken(givenToken)).toThrow(new CoPangException(EXCEPTION_STATUS.LOGIN_TOKEN_ERROR));
     });
   });
+
+  describe('구매자 리프래쉬 토큰 리프래쉬 로그인 테스트', () => {
+    test('구매자가 올바른 refresh 토큰을 이용하여 새 토큰 정보 받아오기를 성공한 경우', () => {
+      const givenTokenIn = 'success_token';
+
+      const givenToken: OneLoginToken = {
+        accessToken: {
+          value: 'accessToken',
+          expiredAt: new Date(),
+        },
+        refreshToken: {
+          value: 'refreshToken',
+          expiredAt: new Date(),
+        },
+      };
+
+      loginToken.verifyByRefresh.calledWith(givenTokenIn).mockReturnValue(givenToken);
+
+      const result = sut.refreshLoginByToken(givenTokenIn);
+
+      expect(result).toEqual(givenToken);
+      expect(loginToken.verifyByRefresh).toHaveBeenCalledWith(givenTokenIn);
+    });
+
+    test('구매자가 올바르지 않은 토큰을 이용하여 유저 정보 반환에 실패한 경우', () => {
+      const givenTokenIn = 'failed_token';
+
+      loginToken.verifyByRefresh.calledWith(givenTokenIn).mockImplementation(() => {
+        throw new CoPangException(EXCEPTION_STATUS.LOGIN_TOKEN_ERROR);
+      });
+
+      expect(() => sut.refreshLoginByToken(givenTokenIn)).toThrow(new CoPangException(EXCEPTION_STATUS.LOGIN_TOKEN_ERROR));
+    });
+  });
 });
