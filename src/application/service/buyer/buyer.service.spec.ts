@@ -31,6 +31,7 @@ describe('Buyer Service test  ', () => {
         id: 1,
         userId: 'copang',
         password: testEncryptPassword,
+        name: '코팡맨',
         nickName: '코팡구매',
         email: 'copang@naver.com',
         phoneNumber: '01012345678',
@@ -39,9 +40,10 @@ describe('Buyer Service test  ', () => {
       const willSignUpBuyer = {
         userId: 'copang',
         password: 'copang1234!',
+        name: '코팡맨',
         nickName: '코팡구매',
         email: 'copang@naver.com',
-        phoneNumber: '010-1234 5678',
+        phoneNumber: '010-1234-5678',
       };
       passwordEncrypt.encrypt.calledWith(willSignUpBuyer.password).mockResolvedValue(testEncryptPassword);
       const buyerRepositorySpy = jest.spyOn(buyerRepository, 'signUp').mockResolvedValue(givenBuyer);
@@ -61,6 +63,7 @@ describe('Buyer Service test  ', () => {
         id: 1,
         userId: 'copang',
         password: testEncryptPassword,
+        name: '코팡맨',
         nickName: '코팡구매',
         email: 'copang@naver.com',
         phoneNumber: '01012345678',
@@ -101,6 +104,7 @@ describe('Buyer Service test  ', () => {
         id: 1,
         userId: 'copang',
         password: testEncryptPassword,
+        name: '코팡맨',
         nickName: '코팡구매',
         email: 'copang@naver.com',
         phoneNumber: '01012345678',
@@ -139,6 +143,7 @@ describe('Buyer Service test  ', () => {
         id: 1,
         userId: 'copang',
         password: testEncryptPassword,
+        name: '코팡맨',
         nickName: '코팡구매',
         email: 'copang@naver.com',
         phoneNumber: '01012345678',

@@ -13,6 +13,7 @@ export class BuyerPrismaRepository implements IBuyerRepository {
     const whereCondition = removeUndefinedKey({
       id: where.id,
       userId: where.userId,
+      name: where.name,
       nickName: where.nickName,
       email: where.email,
       phoneNumber: where.phoneNumber,
