@@ -5,6 +5,7 @@ generator client {
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
+  relationMode = "prisma"
 }
 
 model Seller {
@@ -20,6 +21,7 @@ model Seller {
   deletedAt   DateTime? @map("deleted_at")
 
   Products Product[]
+  OrderProduct OrderProduct[]
 
   @@map("seller")
 }
@@ -29,6 +31,7 @@ model Buyer {
   userId      String    @map("user_id") @unique @db.VarChar(40)
   password    String    @db.VarChar(100)
 
+  name        String    @db.VarChar(100)
   nickName    String    @map("nick_name") @db.VarChar(100)
   email       String    @unique @db.VarChar(100)
   phoneNumber String    @map("phone_number") @unique @db.VarChar(100)
@@ -144,12 +147,14 @@ model OrderProduct {
   quantity    Int
   status      String    @db.VarChar(100)
 
+  sellerId    Int       @map("seller_id")
   orderHistoryId Int    @map("order_history_id")
 
   createdAt   DateTime  @default(now()) @map("created_at")
   updatedAt   DateTime  @default(now()) @map("updated_at") @updatedAt
   deletedAt   DateTime? @map("deleted_at")
 
+  Seller      Seller    @relation(fields: [sellerId], references: [id])
   OrderHistory       OrderHistory    @relation(fields: [orderHistoryId], references: [id])
 
   @@map("order_product")
