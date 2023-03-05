@@ -8,6 +8,9 @@ export class BuyerSignUpReq {
   password: string;
 
   @IsNotEmpty()
+  name: string;
+
+  @IsNotEmpty()
   nickName: string;
 
   @IsEmail()
