@@ -15,7 +15,7 @@ export class BuyerService implements IBuyerService {
     @Inject('ILoginToken') private loginToken: ILoginToken,
   ) {}
   async signUp(buyerSignIn: BuyerSignUpIn) {
-    const phoneNumber = buyerSignIn.phoneNumber.trim().replaceAll('-', '');
+    const phoneNumber = buyerSignIn.phoneNumber.trim().replace(/-/g, '');
     const password = await this.passwordEncrypt.encrypt(buyerSignIn.password);
 
     const buyerSignUpOut: BuyerSignUpOut = {
