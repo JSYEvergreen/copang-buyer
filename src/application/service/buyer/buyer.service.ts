@@ -50,4 +50,8 @@ export class BuyerService implements IBuyerService {
 
     return oneLoginToken;
   }
+
+  loginByToken(loginTokenIn: string) {
+    return this.loginToken.verifyByAccess(loginTokenIn);
+  }
 }

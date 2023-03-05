@@ -4,7 +4,7 @@ import { IPasswordEncrypt } from '../../../domain/service/auth/encrypt/password.
 import { IBuyerRepository } from '../../../domain/service/buyer/buyer.repository';
 import { Buyer } from '../../../domain/service/buyer/buyer';
 import { mock, MockProxy, mockReset } from 'jest-mock-extended';
-import { ILoginToken, OneLoginToken } from '../../../domain/service/auth/token/login.token';
+import { ILoginToken, OneLoginToken, UserInfo } from '../../../domain/service/auth/token/login.token';
 import { BuyerLoginIn } from '../../../domain/service/buyer/port/buyer.in';
 import { CoPangException, EXCEPTION_STATUS } from '../../../domain/common/exception';
 
@@ -168,6 +168,33 @@ describe('Buyer Service test  ', () => {
       expect(buyerRepositorySpy).toHaveBeenCalled();
       expect(passwordEncrypt.compare).toHaveBeenCalledWith(willLoginBuyer.password, givenBuyer.password);
       expect(loginToken.getOne).not.toHaveBeenCalled();
+    });
+  });
+
+  describe('구매자 토큰 로그인 테스트', () => {
+    test('구매자가 올바른 토큰을 이용하여 유저 정보 반환에 성공한 경우', async () => {
+      const givenToken = 'success_token';
+      const willLoginBuyer: UserInfo = {
+        id: 1,
+        userId: 'copang',
+      };
+
+      loginToken.verifyByAccess.calledWith(givenToken).mockReturnValue(willLoginBuyer);
+
+      const result = await sut.loginByToken(givenToken);
+
+      expect(result).toEqual(willLoginBuyer);
+      expect(loginToken.verifyByAccess).toHaveBeenCalledWith(givenToken);
+    });
+
+    test('구매자가 올바르지 않은 토큰을 이용하여 유저 정보 반환에 실패한 경우', async () => {
+      const givenToken = 'failed_token';
+
+      loginToken.verifyByAccess.calledWith(givenToken).mockImplementation(() => {
+        throw new CoPangException(EXCEPTION_STATUS.LOGIN_TOKEN_ERROR);
+      });
+
+      expect(() => sut.loginByToken(givenToken)).toThrow(new CoPangException(EXCEPTION_STATUS.LOGIN_TOKEN_ERROR));
     });
   });
 });
