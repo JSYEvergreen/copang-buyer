@@ -43,4 +43,13 @@ export class BuyerController {
 
     return response;
   }
+
+  @Get('/buyer/refresh-login')
+  async refreshLoginByToken(@Headers('Authorization') bearerToken: string) {
+    const jwtToken = bearerToken.split(' ')[1];
+
+    const response = this.buyerService.refreshLoginByToken(jwtToken);
+
+    return response;
+  }
 }

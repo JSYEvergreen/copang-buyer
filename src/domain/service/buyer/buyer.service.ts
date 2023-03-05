@@ -7,4 +7,5 @@ export interface IBuyerService {
   signUp: (buyerSignIn: BuyerSignUpIn) => Promise<Buyer>;
   login: (loginIn: BuyerLoginIn) => Promise<OneLoginToken>;
   loginByToken: (loginTokenIn: string) => UserInfo;
+  refreshLoginByToken: (refreshLoginTokenIn: string) => OneLoginToken;
 }
