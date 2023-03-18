@@ -58,4 +58,10 @@ export class BuyerController {
     const response = this.buyerService.checkExistUserId(userId);
     return response;
   }
+
+  @Get('/buyer/exist-user-email/:email')
+  async checkExistEmail(@Param('email') email: string) {
+    const response = this.buyerService.checkExistUserEmail(email);
+    return response;
+  }
 }
