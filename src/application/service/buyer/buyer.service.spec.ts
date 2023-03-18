@@ -270,4 +270,38 @@ describe('Buyer Service test  ', () => {
       expect(buyerRepositorySpy).toHaveBeenCalled();
     });
   });
+
+  describe('구매자 email가 이미 존재하는 지 확인하는 기능 테스트', () => {
+    test('구매자의 email를 사용하는 유저가 존재 경우', async () => {
+      const email = 'copang@copang.com';
+      const givenBuyer: Buyer = {
+        id: 1,
+        userId: 'copang',
+        password: testEncryptPassword,
+        name: '코팡맨',
+        nickName: '코팡구매',
+        email: 'copang@copang.com',
+        phoneNumber: '01012345678',
+        deletedAt: null,
+      };
+
+      const buyerRepositorySpy = jest.spyOn(buyerRepository, 'findOne').mockResolvedValue(givenBuyer);
+
+      const result = await sut.checkExistUserEmail(email);
+
+      expect(result).toEqual(true);
+      expect(buyerRepositorySpy).toHaveBeenCalled();
+    });
+
+    test('구매자의 email를 사용하는 유저가 존재하지 않는 경우', async () => {
+      const email = 'copang';
+
+      const buyerRepositorySpy = jest.spyOn(buyerRepository, 'findOne').mockResolvedValue(null);
+
+      const result = await sut.checkExistUserEmail(email);
+
+      expect(result).toEqual(false);
+      expect(buyerRepositorySpy).toHaveBeenCalled();
+    });
+  });
 });
