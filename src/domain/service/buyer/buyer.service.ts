@@ -8,4 +8,5 @@ export interface IBuyerService {
   login: (loginIn: BuyerLoginIn) => Promise<OneLoginToken>;
   loginByToken: (loginTokenIn: string) => UserInfo;
   refreshLoginByToken: (refreshLoginTokenIn: string) => OneLoginToken;
+  checkExistUserId: (userId: string) => Promise<boolean>;
 }
