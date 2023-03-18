@@ -59,4 +59,12 @@ export class BuyerService implements IBuyerService {
   refreshLoginByToken(refreshLoginTokenIn: string) {
     return this.loginToken.verifyByRefresh(refreshLoginTokenIn);
   }
+
+  async checkExistUserId(userId: string) {
+    const existBuyer = await this.buyerRepository.findOne({ userId: userId });
+    if (existBuyer) {
+      return true;
+    }
+    return false;
+  }
 }

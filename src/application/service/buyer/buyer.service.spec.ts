@@ -236,4 +236,38 @@ describe('Buyer Service test  ', () => {
       expect(() => sut.refreshLoginByToken(givenTokenIn)).toThrow(new CoPangException(EXCEPTION_STATUS.LOGIN_TOKEN_ERROR));
     });
   });
+
+  describe('구매자 userId가 이미 존재하는 지 확인하는 기능 테스트', () => {
+    test('구매자의 userId를 사용하는 유저가 존재 경우', async () => {
+      const userId = 'copang';
+      const givenBuyer: Buyer = {
+        id: 1,
+        userId: 'copang',
+        password: testEncryptPassword,
+        name: '코팡맨',
+        nickName: '코팡구매',
+        email: 'copang@naver.com',
+        phoneNumber: '01012345678',
+        deletedAt: null,
+      };
+
+      const buyerRepositorySpy = jest.spyOn(buyerRepository, 'findOne').mockResolvedValue(givenBuyer);
+
+      const result = await sut.checkExistUserId(userId);
+
+      expect(result).toEqual(true);
+      expect(buyerRepositorySpy).toHaveBeenCalled();
+    });
+
+    test('구매자의 userId를 사용하는 유저가 존재하지 않는 경우', async () => {
+      const userId = 'copang';
+
+      const buyerRepositorySpy = jest.spyOn(buyerRepository, 'findOne').mockResolvedValue(null);
+
+      const result = await sut.checkExistUserId(userId);
+
+      expect(result).toEqual(false);
+      expect(buyerRepositorySpy).toHaveBeenCalled();
+    });
+  });
 });

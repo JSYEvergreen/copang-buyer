@@ -1,4 +1,4 @@
-import { Body, Headers, Controller, Inject, Get, Post, UseInterceptors } from '@nestjs/common';
+import { Body, Headers, Controller, Inject, Get, Post, UseInterceptors, Param } from '@nestjs/common';
 import { BuyerLoginReq, BuyerSignUpReq } from './buyer.req.dto';
 import { TransformInterceptor } from '../../common/transform.interceptor';
 import { IBuyerService } from '../../../domain/service/buyer/buyer.service';
@@ -50,6 +50,12 @@ export class BuyerController {
 
     const response = this.buyerService.refreshLoginByToken(jwtToken);
 
+    return response;
+  }
+
+  @Get('/buyer/exist-user-id/:userId')
+  async checkExistId(@Param('userId') userId: string) {
+    const response = this.buyerService.checkExistUserId(userId);
     return response;
   }
 }
