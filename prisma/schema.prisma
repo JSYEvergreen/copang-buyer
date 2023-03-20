@@ -40,7 +40,6 @@ model Buyer {
   updatedAt   DateTime  @map("updated_at") @default(now()) @updatedAt
   deletedAt   DateTime? @map("deleted_at")
 
-  Reviews     Review[]
   Carts       Cart[]
   OrderHistories OrderHistory[]
 
@@ -53,7 +52,8 @@ model Review {
   content     String    @db.Text
 
   productId   Int       @map("product_id")
-  buyerId     Int       @map("buyer_id")
+  userId      Int       @map("user_id")
+  userType    String    @map("user_type")
   parentId    Int?      @map("parent_id")
 
   createdAt   DateTime  @default(now()) @map("created_at")
@@ -61,7 +61,6 @@ model Review {
   deletedAt   DateTime? @map("deleted_at")
 
   Product     Product   @relation(fields: [productId], references: [id])
-  Buyer       Buyer     @relation(fields: [buyerId], references: [id])  
   
   @@map("review")
 }
