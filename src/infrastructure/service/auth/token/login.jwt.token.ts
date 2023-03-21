@@ -3,7 +3,7 @@ import { ACCESS_TOKEN_EXPIRE_DAY, REFRESH_TOKEN_EXPIRE_DAY, secretJwtKey } from 
 import { ILoginToken, OneLoginToken, UserInfo } from '../../../../domain/service/auth/token/login.token';
 import { CoPangException, EXCEPTION_STATUS } from '../../../../domain/common/exception';
 import { addDays } from 'date-fns';
-import { JwtPayload, sign, verify } from 'jsonwebtoken';
+import { JwtPayload, sign, TokenExpiredError, verify } from 'jsonwebtoken';
 
 @Injectable()
 export class LoginJwtToken implements ILoginToken {
@@ -41,6 +41,9 @@ export class LoginJwtToken implements ILoginToken {
     let tokenDecoded: JwtPayload;
     verify(token, secretJwtKey, { complete: true }, function (err, decoded) {
       if (err) {
+        if (err instanceof TokenExpiredError) {
+          throw new CoPangException(EXCEPTION_STATUS.LOGIN_TOKEN_EXPIRE);
+        }
         throw new CoPangException(EXCEPTION_STATUS.LOGIN_TOKEN_ERROR);
       }
       tokenDecoded = decoded.payload as JwtPayload;
@@ -54,6 +57,9 @@ export class LoginJwtToken implements ILoginToken {
 
     verify(token, secretJwtKey, { complete: true }, function (err, decoded) {
       if (err) {
+        if (err instanceof TokenExpiredError) {
+          throw new CoPangException(EXCEPTION_STATUS.LOGIN_TOKEN_EXPIRE);
+        }
         throw new CoPangException(EXCEPTION_STATUS.LOGIN_TOKEN_ERROR);
       }
       tokenDecoded = decoded.payload as JwtPayload;
