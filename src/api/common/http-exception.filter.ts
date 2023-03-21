@@ -9,13 +9,13 @@ export class HttpExceptionFilter implements ExceptionFilter {
     const response = ctx.getResponse<Response>();
     const request = ctx.getRequest<Request>();
     const message = exception.getMessage();
+    const errorCode = exception.getErrorCode();
     console.error(exception);
 
     const responseBody = {
-      status: HttpStatus.INTERNAL_SERVER_ERROR,
+      isSuccess: false,
       message: message,
-      timestamp: new Date().toISOString(),
-      path: request.url,
+      errorCode: errorCode,
     };
 
     console.log(responseBody);

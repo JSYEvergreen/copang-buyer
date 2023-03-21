@@ -3,8 +3,8 @@ import { BuyerController } from '../../../api/service/buyer/buyer.controller';
 import { BuyerService } from '../../../application/service/buyer/buyer.service';
 import { BuyerPrismaRepository } from './buyer.prisma.repository';
 import { PrismaService } from '../../prisma/prisma.service';
-import { PasswordBcryptEncrypt } from '../../../application/service/auth/encrypt/password.bcrypt.encrypt';
-import { LoginJwtToken } from '../../../application/service/auth/token/login.jwt.token';
+import { PasswordBcryptEncrypt } from '../auth/encrypt/password.bcrypt.encrypt';
+import { LoginJwtToken } from '../auth/token/login.jwt.token';
 
 @Module({
   controllers: [BuyerController],
