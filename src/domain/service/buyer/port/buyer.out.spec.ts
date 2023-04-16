@@ -20,7 +20,6 @@ describe('domain buyer.out.ts 테스트', () => {
         willSignUpBuyer.email,
         willSignUpBuyer.phoneNumber,
       );
-      result.regPhoneNumber();
       expect(result.phoneNumber).toEqual(expect.not.stringContaining('-'));
     });
 
@@ -42,7 +41,6 @@ describe('domain buyer.out.ts 테스트', () => {
         willSignUpBuyer.email,
         willSignUpBuyer.phoneNumber,
       );
-      result.regPhoneNumber();
       expect(result.phoneNumber).toEqual(expect.not.stringContaining(' '));
     });
   });

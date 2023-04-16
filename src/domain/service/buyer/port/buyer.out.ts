@@ -12,10 +12,6 @@ export class BuyerSignUpOut {
     this.name = name;
     this.nickName = nickName;
     this.email = email;
-    this.phoneNumber = phoneNumber;
-  }
-
-  regPhoneNumber() {
-    this.phoneNumber = this.phoneNumber.trim().replace(/-/g, '').replace(/(\s*)/g, '');
+    this.phoneNumber = phoneNumber.trim().replace(/-/g, '').replace(/(\s*)/g, '');
   }
 }
