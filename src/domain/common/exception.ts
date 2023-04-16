@@ -1,6 +1,7 @@
 export const EXCEPTION_STATUS = {
   LOGIN_TOKEN_ERROR: { errorCode: 10001, message: '올바른 토큰이 아닙니다' },
   LOGIN_TOKEN_EXPIRE: { errorCode: 10002, message: '만료된 토큰입니다.' },
+  LOGIN_TOKEN_EMPTY: { errorCode: 10003, message: 'Header에 토큰이 존재하지 않습니다.' },
 
   USER_ID_DUPLICATE: { errorCode: 10101, message: '해당 user Id는 이미 존재합니다.' },
   USER_NOT_EXIST: { errorCode: 10102, message: '해당 유저가 존재하지 않습니다.' },
