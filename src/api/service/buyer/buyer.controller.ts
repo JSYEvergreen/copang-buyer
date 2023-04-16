@@ -1,6 +1,7 @@
 import { Body, Headers, Controller, Inject, Get, Post, UseInterceptors, Param } from '@nestjs/common';
 import { BuyerLoginReq, BuyerSignUpReq } from './buyer.req.dto';
 import { TransformInterceptor } from '../../common/transform.interceptor';
+import { HeaderBearerInterceptor } from '../../common/header-bearer.interceptor';
 import { IBuyerService } from '../../../domain/service/buyer/buyer.service';
 import { BuyerLoginRes, BuyerSignUpRes } from './buyer.res.dto';
 
@@ -36,19 +37,17 @@ export class BuyerController {
   }
 
   @Get('/buyer/login')
+  @UseInterceptors(HeaderBearerInterceptor)
   async loginByToken(@Headers('Authorization') bearerToken: string) {
-    const jwtToken = bearerToken.split(' ')[1];
-
-    const response = this.buyerService.loginByToken(jwtToken);
+    const response = this.buyerService.loginByToken(bearerToken);
 
     return response;
   }
 
   @Get('/buyer/refresh-login')
+  @UseInterceptors(HeaderBearerInterceptor)
   async refreshLoginByToken(@Headers('Authorization') bearerToken: string) {
-    const jwtToken = bearerToken.split(' ')[1];
-
-    const response = this.buyerService.refreshLoginByToken(jwtToken);
+    const response = this.buyerService.refreshLoginByToken(bearerToken);
 
     return response;
   }
