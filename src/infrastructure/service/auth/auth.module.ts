@@ -7,7 +7,7 @@ import { LoginJwtToken } from './token/login.jwt.token';
   controllers: [],
   providers: [
     {
-      provide: 'IPasswordEncryptor',
+      provide: 'IPasswordEncrypt',
       useClass: PasswordBcryptEncrypt,
     },
     {
@@ -15,15 +15,6 @@ import { LoginJwtToken } from './token/login.jwt.token';
       useClass: LoginJwtToken,
     },
   ],
-  exports: [
-    {
-      provide: 'IPasswordEncryptor',
-      useClass: PasswordBcryptEncrypt,
-    },
-    {
-      provide: 'ILoginToken',
-      useClass: LoginJwtToken,
-    },
-  ],
+  exports: ['IPasswordEncrypt', 'ILoginToken'],
 })
 export class AuthModule {}

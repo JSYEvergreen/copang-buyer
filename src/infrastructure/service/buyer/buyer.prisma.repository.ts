@@ -1,9 +1,9 @@
 import { Injectable } from '@nestjs/common';
-import { PrismaService } from '../../prisma/prisma.service';
+import { PrismaService } from '../../database/prisma.service';
 import { Buyer as BuyerEntity } from '@prisma/client';
 import { BuyerRepositoryWhere, IBuyerRepository } from '../../../domain/service/buyer/buyer.repository';
 import { BuyerSignUpOut } from '../../../domain/service/buyer/port/buyer.out';
-import { removeUndefinedKey } from '../../../domain/util/json.util';
+import { removeUndefinedKey } from '../../../util/json.util';
 
 @Injectable()
 export class BuyerPrismaRepository implements IBuyerRepository {
