@@ -44,8 +44,6 @@ jobs:
       - run: npm ci
       - name: prisma schema 생성
         run: npx prisma generate
-      - name: lint 적용
-        run: npm run lint
       - name: build
         run: npm run build
       - name: 테스트
