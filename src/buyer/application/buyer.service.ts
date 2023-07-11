@@ -1,11 +1,11 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { IBuyerService } from '../../../domain/service/buyer/buyer.service';
-import { BuyerLoginIn, BuyerSignUpIn } from '../../../domain/service/buyer/port/buyer.in';
-import { IBuyerRepository } from '../../../domain/service/buyer/buyer.repository';
-import { BuyerSignUpOut } from '../../../domain/service/buyer/port/buyer.out';
-import { IPasswordEncrypt } from '../../../domain/service/auth/encrypt/password.encrypt';
-import { CoPangException, EXCEPTION_STATUS } from '../../../domain/common/exception';
-import { ILoginToken } from '../../../domain/service/auth/token/login.token';
+import { IBuyerService } from '../domain/buyer.service';
+import { BuyerLoginIn, BuyerSignUpIn } from '../domain/port/buyer.in';
+import { IBuyerRepository } from '../domain/buyer.repository';
+import { BuyerSignUpOut } from '../domain/port/buyer.out';
+import { IPasswordEncrypt } from '../../auth/domain/password.encrypt';
+import { CoPangException, EXCEPTION_STATUS } from '../../common/domain/exception';
+import { ILoginToken } from '../../auth/domain/login.token';
 
 @Injectable()
 export class BuyerService implements IBuyerService {

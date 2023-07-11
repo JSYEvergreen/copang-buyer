@@ -1,4 +1,4 @@
-import { Token } from '../../../domain/service/auth/token/token';
+import { Token } from '../../auth/domain/token';
 
 export class BuyerSignUpRes {
   id: number;

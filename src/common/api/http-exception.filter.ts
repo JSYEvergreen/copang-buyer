@@ -1,6 +1,6 @@
 import { ExceptionFilter, Catch, ArgumentsHost, HttpStatus } from '@nestjs/common';
 import { Request, Response } from 'express';
-import { CoPangException } from '../../domain/common/exception';
+import { CoPangException } from '../domain/exception';
 
 @Catch(CoPangException)
 export class HttpExceptionFilter implements ExceptionFilter {

@@ -1,6 +1,6 @@
 import { LoginJwtToken } from './login.jwt.token';
-import { UserInfo } from '../../../../domain/service/auth/token/login.token';
-import { CoPangException, EXCEPTION_STATUS } from '../../../../domain/common/exception';
+import { UserInfo } from '../domain/login.token';
+import { CoPangException, EXCEPTION_STATUS } from '../../common/domain/exception';
 
 describe('Login Token 테스트', () => {
   const sut = new LoginJwtToken();
