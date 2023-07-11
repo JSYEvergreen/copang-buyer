@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../../database/infrastructure/prisma.service';
 import { Buyer as BuyerEntity } from '@prisma/client';
 import { BuyerRepositoryWhere, IBuyerRepository } from '../domain/buyer.repository';
-import { BuyerSignUpOut } from '../domain/port/buyer.out';
+import { BuyerChangePasswordOut, BuyerSignUpOut } from '../domain/port/buyer.out';
 import { removeUndefinedKey } from '../../util/json.util';
 
 @Injectable()
@@ -30,6 +30,17 @@ export class BuyerPrismaRepository implements IBuyerRepository {
     return this.prisma.buyer.create({
       data: {
         ...buyerSignUpOut,
+      },
+    });
+  }
+
+  async changePassword(changePasswordOut: BuyerChangePasswordOut): Promise<BuyerEntity> {
+    return this.prisma.buyer.update({
+      where: {
+        id: changePasswordOut.id,
+      },
+      data: {
+        password: changePasswordOut.password,
       },
     });
   }
