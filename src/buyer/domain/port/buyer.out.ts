@@ -4,7 +4,7 @@ export class BuyerSignUpOut {
   readonly name: string;
   readonly nickName: string;
   readonly email: string;
-  phoneNumber: string;
+  readonly phoneNumber: string;
 
   constructor(userId: string, password: string, name: string, nickName: string, email: string, phoneNumber: string) {
     this.userId = userId;
@@ -12,10 +12,6 @@ export class BuyerSignUpOut {
     this.name = name;
     this.nickName = nickName;
     this.email = email;
-    this.phoneNumber = phoneNumber;
-  }
-
-  regPhoneNumber() {
-    this.phoneNumber = this.phoneNumber.trim().replace(/-/g, '').replace(/(\s*)/g, '');
+    this.phoneNumber = phoneNumber.trim().replace(/-/g, '').replace(/(\s*)/g, '');
   }
 }

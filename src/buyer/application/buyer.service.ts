@@ -25,7 +25,6 @@ export class BuyerService implements IBuyerService {
       buyerSignIn.email,
       buyerSignIn.phoneNumber,
     );
-    buyerSignUpOut.regPhoneNumber();
 
     const createBuyer = await this.buyerRepository.signUp(buyerSignUpOut);
 
