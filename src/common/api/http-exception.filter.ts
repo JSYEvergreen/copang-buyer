@@ -7,9 +7,10 @@ export class HttpExceptionFilter implements ExceptionFilter {
   catch(exception: CoPangException, host: ArgumentsHost) {
     const ctx = host.switchToHttp();
     const response = ctx.getResponse<Response>();
-    const request = ctx.getRequest<Request>();
     const message = exception.getMessage();
     const errorCode = exception.getErrorCode();
+    response.locals.errorCode = errorCode;
+
     console.error(exception);
 
     const responseBody = {
