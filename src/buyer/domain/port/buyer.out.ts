@@ -15,3 +15,8 @@ export class BuyerSignUpOut {
     this.phoneNumber = phoneNumber.trim().replace(/-/g, '').replace(/(\s*)/g, '');
   }
 }
+
+export interface BuyerChangePasswordOut {
+  id: number;
+  password: string;
+}

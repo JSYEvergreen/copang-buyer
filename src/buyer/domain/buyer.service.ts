@@ -1,5 +1,5 @@
 import { Buyer } from './buyer';
-import { BuyerSignUpIn, BuyerLoginIn } from './port/buyer.in';
+import { BuyerSignUpIn, BuyerLoginIn, BuyerChangePasswordIn } from './port/buyer.in';
 import { OneLoginToken } from '../../auth/domain/login.token';
 import { UserInfo } from '../../auth/domain/login.token';
 
@@ -10,4 +10,5 @@ export interface IBuyerService {
   refreshLoginByToken: (refreshLoginTokenIn: string) => OneLoginToken;
   checkExistUserId: (userId: string) => Promise<boolean>;
   checkExistUserEmail: (email: string) => Promise<boolean>;
+  changePassword: (changePasswordIn: BuyerChangePasswordIn) => Promise<void>;
 }

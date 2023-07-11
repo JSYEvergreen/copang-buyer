@@ -28,3 +28,8 @@ export class BuyerLoginReq {
   @IsNotEmpty()
   password: string;
 }
+
+export class BuyerChangePasswordReq {
+  @IsNotEmpty()
+  password: string;
+}

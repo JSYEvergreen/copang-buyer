@@ -1,6 +1,6 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { IBuyerService } from '../domain/buyer.service';
-import { BuyerLoginIn, BuyerSignUpIn } from '../domain/port/buyer.in';
+import { BuyerChangePasswordIn, BuyerLoginIn, BuyerSignUpIn } from '../domain/port/buyer.in';
 import { IBuyerRepository } from '../domain/buyer.repository';
 import { BuyerSignUpOut } from '../domain/port/buyer.out';
 import { IPasswordEncrypt } from '../../auth/domain/password.encrypt';
@@ -73,5 +73,27 @@ export class BuyerService implements IBuyerService {
       return true;
     }
     return false;
+  }
+
+  async changePassword(changePasswordIn: BuyerChangePasswordIn) {
+    const newPassword = changePasswordIn.password;
+    const tokenBuyer = this.loginToken.verifyByAccess(changePasswordIn.accessToken);
+
+    const buyer = await this.buyerRepository.findOne({ id: tokenBuyer.id });
+    if (!buyer) {
+      throw new CoPangException(EXCEPTION_STATUS.USER_NOT_EXIST);
+    }
+    if (buyer.deletedAt) {
+      throw new CoPangException(EXCEPTION_STATUS.USER_DELETED);
+    }
+
+    const isSameBeforePassword = await this.passwordEncrypt.compare(newPassword, buyer.password);
+    if (isSameBeforePassword) {
+      throw new CoPangException(EXCEPTION_STATUS.USER_CHANGE_PASSWORD_SAME);
+    }
+
+    const newPasswordEncrypt = await this.passwordEncrypt.encrypt(newPassword);
+
+    await this.buyerRepository.changePassword({ id: buyer.id, password: newPasswordEncrypt });
   }
 }

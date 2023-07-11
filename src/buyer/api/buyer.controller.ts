@@ -1,8 +1,9 @@
-import { Body, Headers, Controller, Inject, Get, Post, UseInterceptors, Param } from '@nestjs/common';
-import { BuyerLoginReq, BuyerSignUpReq } from './buyer.req.dto';
+import { Body, Headers, Controller, Inject, Get, Post, UseInterceptors, Param, UseGuards } from '@nestjs/common';
+import { BuyerChangePasswordReq, BuyerLoginReq, BuyerSignUpReq } from './buyer.req.dto';
 import { TransformInterceptor } from '../../common/api/transform.interceptor';
 import { IBuyerService } from '../domain/buyer.service';
 import { BuyerLoginRes, BuyerSignUpRes } from './buyer.res.dto';
+import { AuthAuthorizationGuard } from '../../auth/api/auth.authorization.guard';
 
 @Controller()
 @UseInterceptors(TransformInterceptor)
@@ -62,6 +63,15 @@ export class BuyerController {
   @Get('/buyer/exist-user-email/:email')
   async checkExistEmail(@Param('email') email: string) {
     const response = this.buyerService.checkExistUserEmail(email);
+    return response;
+  }
+
+  @Post('/buyer/change/password')
+  @UseGuards(AuthAuthorizationGuard)
+  async changePassword(@Headers('Authorization') bearerToken: string, @Body() changePasswordReq: BuyerChangePasswordReq) {
+    const accessToken = bearerToken.split(' ')[1];
+    const response = await this.buyerService.changePassword({ accessToken, ...changePasswordReq });
+
     return response;
   }
 }

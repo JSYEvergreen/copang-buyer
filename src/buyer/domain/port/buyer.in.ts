@@ -11,3 +11,8 @@ export interface BuyerLoginIn {
   userId: string;
   password: string;
 }
+
+export interface BuyerChangePasswordIn {
+  accessToken: string;
+  password: string;
+}
