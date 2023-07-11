@@ -150,17 +150,6 @@ describe('Buyer Service test  ', () => {
         deletedAt: null,
       };
 
-      const givenToken: OneLoginToken = {
-        accessToken: {
-          value: 'accessToken',
-          expiredAt: new Date(),
-        },
-        refreshToken: {
-          value: 'refreshToken',
-          expiredAt: new Date(),
-        },
-      };
-
       const willLoginBuyer: BuyerLoginIn = {
         userId: 'copang',
         password: testPassword,
