@@ -1,9 +1,9 @@
 import { Injectable } from '@nestjs/common';
-import { PrismaService } from '../../database/prisma.service';
+import { PrismaService } from '../../database/infrastructure/prisma.service';
 import { Buyer as BuyerEntity } from '@prisma/client';
-import { BuyerRepositoryWhere, IBuyerRepository } from '../../../domain/service/buyer/buyer.repository';
-import { BuyerSignUpOut } from '../../../domain/service/buyer/port/buyer.out';
-import { removeUndefinedKey } from '../../../util/json.util';
+import { BuyerRepositoryWhere, IBuyerRepository } from '../domain/buyer.repository';
+import { BuyerSignUpOut } from '../domain/port/buyer.out';
+import { removeUndefinedKey } from '../../util/json.util';
 
 @Injectable()
 export class BuyerPrismaRepository implements IBuyerRepository {
@@ -19,7 +19,7 @@ export class BuyerPrismaRepository implements IBuyerRepository {
       phoneNumber: where.phoneNumber,
       deletedAt: null,
     });
-    return await this.prisma.buyer.findFirst({
+    return this.prisma.buyer.findFirst({
       where: {
         ...whereCondition,
       },
@@ -27,7 +27,7 @@ export class BuyerPrismaRepository implements IBuyerRepository {
   }
 
   async signUp(buyerSignUpOut: BuyerSignUpOut): Promise<BuyerEntity> {
-    return await this.prisma.buyer.create({
+    return this.prisma.buyer.create({
       data: {
         ...buyerSignUpOut,
       },

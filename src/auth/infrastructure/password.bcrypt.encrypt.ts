@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { IPasswordEncrypt } from '../../../../domain/service/auth/encrypt/password.encrypt';
+import { IPasswordEncrypt } from '../domain/password.encrypt';
 import * as bcrypt from 'bcrypt';
 
 @Injectable()

@@ -1,12 +1,12 @@
 import { BuyerService } from './buyer.service';
-import { IBuyerService } from '../../../domain/service/buyer/buyer.service';
-import { IPasswordEncrypt } from '../../../domain/service/auth/encrypt/password.encrypt';
-import { IBuyerRepository } from '../../../domain/service/buyer/buyer.repository';
-import { Buyer } from '../../../domain/service/buyer/buyer';
+import { IBuyerService } from '../domain/buyer.service';
+import { IPasswordEncrypt } from '../../auth/domain/password.encrypt';
+import { IBuyerRepository } from '../domain/buyer.repository';
+import { Buyer } from '../domain/buyer';
 import { mock, MockProxy, mockReset } from 'jest-mock-extended';
-import { ILoginToken, OneLoginToken, UserInfo } from '../../../domain/service/auth/token/login.token';
-import { BuyerLoginIn } from '../../../domain/service/buyer/port/buyer.in';
-import { CoPangException, EXCEPTION_STATUS } from '../../../domain/common/exception';
+import { ILoginToken, OneLoginToken, UserInfo } from '../../auth/domain/login.token';
+import { BuyerLoginIn } from '../domain/port/buyer.in';
+import { CoPangException, EXCEPTION_STATUS } from '../../common/domain/exception';
 
 describe('Buyer Service test  ', () => {
   const buyerRepository: MockProxy<IBuyerRepository> = mock<IBuyerRepository>();

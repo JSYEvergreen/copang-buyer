@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
-import { ACCESS_TOKEN_EXPIRE_DAY, REFRESH_TOKEN_EXPIRE_DAY, secretJwtKey } from '../../../../domain/common/definition';
-import { ILoginToken, OneLoginToken, UserInfo } from '../../../../domain/service/auth/token/login.token';
-import { CoPangException, EXCEPTION_STATUS } from '../../../../domain/common/exception';
+import { ACCESS_TOKEN_EXPIRE_DAY, REFRESH_TOKEN_EXPIRE_DAY, secretJwtKey } from '../../common/domain/definition';
+import { ILoginToken, OneLoginToken, UserInfo } from '../domain/login.token';
+import { CoPangException, EXCEPTION_STATUS } from '../../common/domain/exception';
 import { addDays } from 'date-fns';
 import { JwtPayload, sign, TokenExpiredError, verify } from 'jsonwebtoken';
 

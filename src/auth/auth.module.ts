@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
-import { PasswordBcryptEncrypt } from './encrypt/password.bcrypt.encrypt';
-import { LoginJwtToken } from './token/login.jwt.token';
+import { PasswordBcryptEncrypt } from './infrastructure/password.bcrypt.encrypt';
+import { LoginJwtToken } from './infrastructure/login.jwt.token';
 
 @Module({
   imports: [],

@@ -1,7 +1,7 @@
 import { Body, Headers, Controller, Inject, Get, Post, UseInterceptors, Param } from '@nestjs/common';
 import { BuyerLoginReq, BuyerSignUpReq } from './buyer.req.dto';
-import { TransformInterceptor } from '../../common/transform.interceptor';
-import { IBuyerService } from '../../../domain/service/buyer/buyer.service';
+import { TransformInterceptor } from '../../common/api/transform.interceptor';
+import { IBuyerService } from '../domain/buyer.service';
 import { BuyerLoginRes, BuyerSignUpRes } from './buyer.res.dto';
 
 @Controller()
