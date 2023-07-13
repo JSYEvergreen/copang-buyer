@@ -16,3 +16,8 @@ export interface BuyerChangePasswordIn {
   accessToken: string;
   password: string;
 }
+
+export interface BuyerChangeNickNameIn {
+  accessToken: string;
+  nickName: string;
+}
