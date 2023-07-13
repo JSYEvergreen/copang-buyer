@@ -9,6 +9,7 @@ export class LoggerMiddleware implements NestMiddleware {
     const { ip, method, originalUrl } = req;
     const userAgent = req.get('user-agent') || '';
     const token = req.get('Authorization')?.split(' ')[1] || '';
+    const now = Date.now();
 
     res.on('finish', () => {
       const {
@@ -16,7 +17,7 @@ export class LoggerMiddleware implements NestMiddleware {
         locals: { errorCode },
       } = res;
 
-      let message = `${method} ${originalUrl} ${ip} ${userAgent} ${statusCode}`;
+      let message = `${method} ${originalUrl} ${ip} ${userAgent} ${statusCode} ${Date.now() - now}ms`;
       message = errorCode ? message + ` ${errorCode}` : message;
       message = token ? message + ` ${token}` : message;
 
