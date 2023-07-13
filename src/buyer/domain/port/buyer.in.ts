@@ -12,12 +12,18 @@ export interface BuyerLoginIn {
   password: string;
 }
 
-export interface BuyerChangePasswordIn {
+export interface BuyerAccessToken {
   accessToken: string;
+}
+
+export interface BuyerChangePasswordIn extends BuyerAccessToken {
   password: string;
 }
 
-export interface BuyerChangeNickNameIn {
-  accessToken: string;
+export interface BuyerChangeNickNameIn extends BuyerAccessToken {
   nickName: string;
+}
+
+export interface BuyerChangeEmailIn extends BuyerAccessToken {
+  email: string;
 }

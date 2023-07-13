@@ -1,5 +1,5 @@
 import { Body, Controller, Get, Headers, Inject, Param, Post, UseInterceptors } from '@nestjs/common';
-import { BuyerChangeNickNameReq, BuyerChangePasswordReq, BuyerLoginReq, BuyerSignUpReq } from './buyer.req.dto';
+import { BuyerChangeEmailReq, BuyerChangeNickNameReq, BuyerChangePasswordReq, BuyerLoginReq, BuyerSignUpReq } from './buyer.req.dto';
 import { TransformInterceptor } from '../../common/api/transform.interceptor';
 import { IBuyerService } from '../domain/buyer.service';
 import { BuyerLoginRes, BuyerSignUpRes } from './buyer.res.dto';
@@ -75,5 +75,11 @@ export class BuyerController {
   async changeNickName(@Headers('Authorization') bearerToken: string, @Body() nickNameReq: BuyerChangeNickNameReq) {
     const accessToken = bearerToken.split(' ')[1];
     await this.buyerService.changeNickName({ accessToken, ...nickNameReq });
+  }
+
+  @Post('/buyer/change/email')
+  async changeEmail(@Headers('Authorization') bearerToken: string, @Body() emailReq: BuyerChangeEmailReq) {
+    const accessToken = bearerToken.split(' ')[1];
+    await this.buyerService.changeEmail({ accessToken, ...emailReq });
   }
 }
