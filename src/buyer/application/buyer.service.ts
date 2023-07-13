@@ -1,12 +1,18 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { IBuyerService } from '../domain/buyer.service';
-import { BuyerChangeEmailIn, BuyerChangeNickNameIn, BuyerChangePasswordIn, BuyerLoginIn, BuyerSignUpIn } from '../domain/port/buyer.in';
+import {
+  BuyerChangeEmailIn,
+  BuyerChangeNickNameIn,
+  BuyerChangePasswordIn,
+  BuyerChangePhoneNumberIn,
+  BuyerLoginIn,
+  BuyerSignUpIn,
+} from '../domain/port/buyer.in';
 import { IBuyerRepository } from '../domain/buyer.repository';
 import { BuyerSignUpOut } from '../domain/port/buyer.out';
 import { IPasswordEncrypt } from '../../auth/domain/password.encrypt';
 import { CoPangException, EXCEPTION_STATUS } from '../../common/domain/exception';
 import { ILoginToken } from '../../auth/domain/login.token';
-import { formattingPhoneNumber } from '../domain/buyer';
 
 @Injectable()
 export class BuyerService implements IBuyerService {
@@ -18,14 +24,7 @@ export class BuyerService implements IBuyerService {
   async signUp(buyerSignIn: BuyerSignUpIn) {
     const password = await this.passwordEncrypt.encrypt(buyerSignIn.password);
 
-    const buyerSignUpOut: BuyerSignUpOut = {
-      userId: buyerSignIn.userId,
-      password: formattingPhoneNumber(password),
-      name: buyerSignIn.name,
-      nickName: buyerSignIn.nickName,
-      email: buyerSignIn.email,
-      phoneNumber: buyerSignIn.phoneNumber,
-    };
+    const buyerSignUpOut: BuyerSignUpOut = { ...buyerSignIn };
 
     const createBuyer = await this.buyerRepository.signUp(buyerSignUpOut);
 
@@ -133,6 +132,25 @@ export class BuyerService implements IBuyerService {
     }
 
     const changeBuyer = await this.buyerRepository.changeEmail({ id: buyer.id, email: changedEmail });
+    return changeBuyer;
+  }
+
+  async changePhoneNumber(changePhoneNumber: BuyerChangePhoneNumberIn) {
+    const changedPhoneNumber = changePhoneNumber.phoneNumber;
+    const tokenBuyer = this.loginToken.verifyByAccess(changePhoneNumber.accessToken);
+
+    const buyer = await this.buyerRepository.findOne({ id: tokenBuyer.id });
+
+    if (!buyer) {
+      throw new CoPangException(EXCEPTION_STATUS.USER_NOT_EXIST);
+    }
+
+    const duplicatePhoneNumberBuyer = await this.buyerRepository.findOne({ phoneNumber: changedPhoneNumber });
+    if (duplicatePhoneNumberBuyer) {
+      throw new CoPangException(EXCEPTION_STATUS.USER_CHANGE_PHONE_NUMBER_SAME);
+    }
+
+    const changeBuyer = await this.buyerRepository.changePhoneNumber({ id: buyer.id, phoneNumber: changedPhoneNumber });
     return changeBuyer;
   }
 }

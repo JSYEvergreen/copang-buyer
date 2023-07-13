@@ -589,4 +589,95 @@ describe('Buyer Service test  ', () => {
       });
     });
   });
+
+  describe('구매자 핸드폰번호 변경 기능 테스트 ', () => {
+    describe('성공 케이스', () => {
+      test('핸드폰번호 변경이 성공한 케이스', async () => {
+        const accessToken = 'token';
+        const phoneNumber = '01012345678';
+
+        const givenUserInfo: UserInfo = {
+          id: 1,
+          userId: 'copang',
+        };
+
+        const givenBuyer: Buyer = {
+          id: 1,
+          userId: 'copang',
+          password: testEncryptPassword,
+          name: '코팡맨',
+          nickName: '변경전코팡구매',
+          email: 'copang@copang.com',
+          phoneNumber: '01012345678',
+          deletedAt: null,
+        };
+
+        loginToken.verifyByAccess.mockReturnValue(givenUserInfo);
+        buyerRepository.findOne.mockResolvedValueOnce(givenBuyer).mockResolvedValueOnce(null);
+
+        const buyerRepositoryChangePhoneNumberSpy = jest.spyOn(buyerRepository, 'changePhoneNumber').mockResolvedValue(givenBuyer);
+
+        const result = await sut.changePhoneNumber({ accessToken, phoneNumber });
+
+        expect(buyerRepositoryChangePhoneNumberSpy).toHaveBeenCalled();
+      });
+    });
+
+    describe('실패 케이스', () => {
+      test('해당하는 id의 buyer 정보가 DB에 존재하지 않은 경우', async () => {
+        const accessToken = 'token';
+        const phoneNumber = '01012345678';
+
+        const givenUserInfo: UserInfo = {
+          id: 1,
+          userId: 'copang',
+        };
+
+        loginToken.verifyByAccess.mockReturnValue(givenUserInfo);
+        buyerRepository.findOne.mockResolvedValue(null);
+
+        await expect(async () => await sut.changePhoneNumber({ accessToken, phoneNumber })).rejects.toThrow(
+          new CoPangException(EXCEPTION_STATUS.USER_NOT_EXIST),
+        );
+      });
+
+      test('변경하고자 하는 핸드폰번호가 이미 사용중 인 경우', async () => {
+        const accessToken = 'token';
+        const phoneNumber = '01012345678';
+
+        const givenUserInfo: UserInfo = {
+          id: 1,
+          userId: 'copang',
+        };
+
+        const givenBuyer: Buyer = {
+          id: 1,
+          userId: 'copang',
+          password: testEncryptPassword,
+          name: '코팡맨',
+          nickName: '코팡구매',
+          email: 'copang@copang.com',
+          phoneNumber: '01012345678',
+          deletedAt: null,
+        };
+
+        const otherBuyer: Buyer = {
+          id: 2,
+          userId: 'copang',
+          password: testEncryptPassword,
+          name: '코팡맨',
+          nickName: '닉네임',
+          email: 'copang@copang.com',
+          phoneNumber: '01012345678',
+          deletedAt: null,
+        };
+        loginToken.verifyByAccess.mockReturnValue(givenUserInfo);
+        buyerRepository.findOne.mockResolvedValueOnce(givenBuyer).mockResolvedValueOnce(otherBuyer);
+
+        await expect(async () => await sut.changePhoneNumber({ accessToken, phoneNumber })).rejects.toThrow(
+          new CoPangException(EXCEPTION_STATUS.USER_CHANGE_PHONE_NUMBER_SAME),
+        );
+      });
+    });
+  });
 });

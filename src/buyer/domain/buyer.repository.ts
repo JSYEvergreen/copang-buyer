@@ -1,4 +1,4 @@
-import { BuyerChangeEmailOut, BuyerChangeNickNameOut, BuyerChangePasswordOut, BuyerSignUpOut } from './port/buyer.out';
+import { BuyerChangeEmailOut, BuyerChangeNickNameOut, BuyerChangePasswordOut, BuyerChangePhoneNumberOut, BuyerSignUpOut } from './port/buyer.out';
 import { Buyer } from './buyer';
 
 export type BuyerRepositoryWhere = Partial<Buyer>;
@@ -9,4 +9,5 @@ export interface IBuyerRepository {
   changePassword: (changePasswordOut: BuyerChangePasswordOut) => Promise<Buyer>;
   changeNickName: (changeNickNameOut: BuyerChangeNickNameOut) => Promise<Buyer>;
   changeEmail: (changeEmailOut: BuyerChangeEmailOut) => Promise<Buyer>;
+  changePhoneNumber: (changePhoneNumberOut: BuyerChangePhoneNumberOut) => Promise<Buyer>;
 }

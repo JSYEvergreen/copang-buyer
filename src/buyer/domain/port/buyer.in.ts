@@ -27,3 +27,7 @@ export interface BuyerChangeNickNameIn extends BuyerAccessToken {
 export interface BuyerChangeEmailIn extends BuyerAccessToken {
   email: string;
 }
+
+export interface BuyerChangePhoneNumberIn extends BuyerAccessToken {
+  phoneNumber: string;
+}

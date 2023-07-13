@@ -1,4 +1,6 @@
 import { IsEmail, IsNotEmpty } from 'class-validator';
+import { Transform } from 'class-transformer';
+import { formattingPhoneNumber } from '../domain/buyer';
 
 export class BuyerSignUpReq {
   @IsNotEmpty()
@@ -18,6 +20,7 @@ export class BuyerSignUpReq {
   email: string;
 
   @IsNotEmpty()
+  @Transform(({ value }) => formattingPhoneNumber(value))
   phoneNumber: string;
 }
 
@@ -43,4 +46,10 @@ export class BuyerChangeEmailReq {
   @IsEmail()
   @IsNotEmpty()
   email: string;
+}
+
+export class BuyerChangePhoneNumberReq {
+  @IsNotEmpty()
+  @Transform(({ value }) => formattingPhoneNumber(value))
+  phoneNumber: string;
 }

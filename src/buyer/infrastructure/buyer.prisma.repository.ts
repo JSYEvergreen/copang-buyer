@@ -2,7 +2,13 @@ import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../../database/infrastructure/prisma.service';
 import { Buyer as BuyerEntity } from '@prisma/client';
 import { BuyerRepositoryWhere, IBuyerRepository } from '../domain/buyer.repository';
-import { BuyerChangeEmailOut, BuyerChangeNickNameOut, BuyerChangePasswordOut, BuyerSignUpOut } from '../domain/port/buyer.out';
+import {
+  BuyerChangeEmailOut,
+  BuyerChangeNickNameOut,
+  BuyerChangePasswordOut,
+  BuyerChangePhoneNumberOut,
+  BuyerSignUpOut,
+} from '../domain/port/buyer.out';
 import { removeUndefinedKey } from '../../util/json.util';
 
 @Injectable()
@@ -63,6 +69,17 @@ export class BuyerPrismaRepository implements IBuyerRepository {
       },
       data: {
         email: changeNickNameOut.email,
+      },
+    });
+  }
+
+  async changePhoneNumber(changeNickNameOut: BuyerChangePhoneNumberOut): Promise<BuyerEntity> {
+    return this.prisma.buyer.update({
+      where: {
+        id: changeNickNameOut.id,
+      },
+      data: {
+        phoneNumber: changeNickNameOut.phoneNumber,
       },
     });
   }

@@ -1,5 +1,12 @@
 import { Buyer } from './buyer';
-import { BuyerChangeEmailIn, BuyerChangeNickNameIn, BuyerChangePasswordIn, BuyerLoginIn, BuyerSignUpIn } from './port/buyer.in';
+import {
+  BuyerChangeEmailIn,
+  BuyerChangeNickNameIn,
+  BuyerChangePasswordIn,
+  BuyerChangePhoneNumberIn,
+  BuyerLoginIn,
+  BuyerSignUpIn,
+} from './port/buyer.in';
 import { OneLoginToken, UserInfo } from '../../auth/domain/login.token';
 
 export interface IBuyerService {
@@ -12,4 +19,5 @@ export interface IBuyerService {
   changePassword: (changePasswordIn: BuyerChangePasswordIn) => Promise<void>;
   changeNickName: (changeNickNameIn: BuyerChangeNickNameIn) => Promise<Buyer>;
   changeEmail: (changeEmailIn: BuyerChangeEmailIn) => Promise<Buyer>;
+  changePhoneNumber: (changePhoneNumberIn: BuyerChangePhoneNumberIn) => Promise<Buyer>;
 }
