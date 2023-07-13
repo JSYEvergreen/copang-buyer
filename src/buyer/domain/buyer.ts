@@ -8,3 +8,7 @@ export interface Buyer {
   phoneNumber: string;
   deletedAt: Date | null;
 }
+
+export const formattingPhoneNumber = (phoneNumber: string) => {
+  return phoneNumber.trim().replace(/-/g, '').replace(/(\s*)/g, '');
+};

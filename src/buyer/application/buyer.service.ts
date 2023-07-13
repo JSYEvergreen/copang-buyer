@@ -6,6 +6,7 @@ import { BuyerSignUpOut } from '../domain/port/buyer.out';
 import { IPasswordEncrypt } from '../../auth/domain/password.encrypt';
 import { CoPangException, EXCEPTION_STATUS } from '../../common/domain/exception';
 import { ILoginToken } from '../../auth/domain/login.token';
+import { formattingPhoneNumber } from '../domain/buyer';
 
 @Injectable()
 export class BuyerService implements IBuyerService {
@@ -17,14 +18,14 @@ export class BuyerService implements IBuyerService {
   async signUp(buyerSignIn: BuyerSignUpIn) {
     const password = await this.passwordEncrypt.encrypt(buyerSignIn.password);
 
-    const buyerSignUpOut = new BuyerSignUpOut(
-      buyerSignIn.userId,
-      password,
-      buyerSignIn.name,
-      buyerSignIn.nickName,
-      buyerSignIn.email,
-      buyerSignIn.phoneNumber,
-    );
+    const buyerSignUpOut: BuyerSignUpOut = {
+      userId: buyerSignIn.userId,
+      password: formattingPhoneNumber(password),
+      name: buyerSignIn.name,
+      nickName: buyerSignIn.nickName,
+      email: buyerSignIn.email,
+      phoneNumber: buyerSignIn.phoneNumber,
+    };
 
     const createBuyer = await this.buyerRepository.signUp(buyerSignUpOut);
 
