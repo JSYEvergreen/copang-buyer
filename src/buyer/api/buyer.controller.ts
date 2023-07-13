@@ -1,5 +1,12 @@
 import { Body, Controller, Get, Headers, Inject, Param, Post, UseInterceptors } from '@nestjs/common';
-import { BuyerChangeEmailReq, BuyerChangeNickNameReq, BuyerChangePasswordReq, BuyerLoginReq, BuyerSignUpReq } from './buyer.req.dto';
+import {
+  BuyerChangeEmailReq,
+  BuyerChangeNickNameReq,
+  BuyerChangePasswordReq,
+  BuyerChangePhoneNumberReq,
+  BuyerLoginReq,
+  BuyerSignUpReq,
+} from './buyer.req.dto';
 import { TransformInterceptor } from '../../common/api/transform.interceptor';
 import { IBuyerService } from '../domain/buyer.service';
 import { BuyerLoginRes, BuyerSignUpRes } from './buyer.res.dto';
@@ -81,5 +88,11 @@ export class BuyerController {
   async changeEmail(@Headers('Authorization') bearerToken: string, @Body() emailReq: BuyerChangeEmailReq) {
     const accessToken = bearerToken.split(' ')[1];
     await this.buyerService.changeEmail({ accessToken, ...emailReq });
+  }
+
+  @Post('/buyer/change/phone-number')
+  async changePhoneNumber(@Headers('Authorization') bearerToken: string, @Body() phoneNumberReq: BuyerChangePhoneNumberReq) {
+    const accessToken = bearerToken.split(' ')[1];
+    await this.buyerService.changePhoneNumber({ accessToken, ...phoneNumberReq });
   }
 }

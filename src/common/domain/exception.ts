@@ -11,6 +11,7 @@ export const EXCEPTION_STATUS = {
   USER_CHANGE_PASSWORD_SAME: { errorCode: 10105, message: '이전 비밀번호와 동일한 비밀번호 입니다.' },
   USER_CHANGE_NICK_NAME_SAME: { errorCode: 10106, message: '닉네임이 동일한 유저가 존재합니다.' },
   USER_CHANGE_EMAIL_SAME: { errorCode: 10107, message: '이메일이 동일한 유저가 존재합니다.' },
+  USER_CHANGE_PHONE_NUMBER_SAME: { errorCode: 10107, message: '휴대폰 번호가 동일한 유저가 존재합니다.' },
 
   PAGING_NUM_ERROR: { errorCode: 10201, message: '페이징 넘버 에러' },
   PAGING_SORT_BY_OPTION_ERROR: { errorCode: 10202, message: '존재하지 않는 정렬 옵션' },

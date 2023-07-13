@@ -21,3 +21,8 @@ export interface BuyerChangeEmailOut {
   id: number;
   email: string;
 }
+
+export interface BuyerChangePhoneNumberOut {
+  id: number;
+  phoneNumber: string;
+}
