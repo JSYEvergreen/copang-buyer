@@ -297,13 +297,8 @@ describe('Buyer Service test  ', () => {
   describe('구매자 비밀번호 변경 기능 테스트 ', () => {
     describe('성공 케이스', () => {
       test('비밀번호 변경이 성공한 케이스', async () => {
-        const accessToken = 'token';
+        const id = 1;
         const password = 'copang1234!';
-
-        const givenUserInfo: UserInfo = {
-          id: 1,
-          userId: 'copang',
-        };
 
         const givenBuyer: Buyer = {
           id: 1,
@@ -316,13 +311,12 @@ describe('Buyer Service test  ', () => {
           deletedAt: null,
         };
 
-        loginToken.verifyByAccess.mockReturnValue(givenUserInfo);
         buyerRepository.findOne.mockResolvedValue(givenBuyer);
         passwordEncrypt.compare.mockResolvedValue(false);
         passwordEncrypt.encrypt.mockResolvedValue('password1234');
         const buyerRepositoryChangePasswordSpy = jest.spyOn(buyerRepository, 'changePassword').mockResolvedValue(givenBuyer);
 
-        const result = await sut.changePassword({ accessToken: accessToken, password });
+        const result = await sut.changePassword({ id, password });
 
         expect(buyerRepositoryChangePasswordSpy).toHaveBeenCalled();
       });
@@ -330,7 +324,7 @@ describe('Buyer Service test  ', () => {
 
     describe('실패 케이스', () => {
       test('해당하는 id의 buyer 정보가 DB에 존재하지 않은 경우', async () => {
-        const accessToken = 'token';
+        const id = 1;
         const password = 'copang1234!';
 
         const givenUserInfo: UserInfo = {
@@ -343,13 +337,11 @@ describe('Buyer Service test  ', () => {
         passwordEncrypt.compare.mockResolvedValue(true);
         passwordEncrypt.encrypt.mockResolvedValue('password1234');
 
-        await expect(async () => await sut.changePassword({ accessToken: accessToken, password })).rejects.toThrow(
-          new CoPangException(EXCEPTION_STATUS.USER_NOT_EXIST),
-        );
+        await expect(async () => await sut.changePassword({ id, password })).rejects.toThrow(new CoPangException(EXCEPTION_STATUS.USER_NOT_EXIST));
       });
 
       test('해당하는 id의 buyer가 삭제된 유저인 경우', async () => {
-        const accessToken = 'token';
+        const id = 1;
         const password = 'copang1234!';
 
         const givenUserInfo: UserInfo = {
@@ -373,13 +365,11 @@ describe('Buyer Service test  ', () => {
         passwordEncrypt.compare.mockResolvedValue(true);
         passwordEncrypt.encrypt.mockResolvedValue('password1234');
 
-        await expect(async () => await sut.changePassword({ accessToken: accessToken, password })).rejects.toThrow(
-          new CoPangException(EXCEPTION_STATUS.USER_DELETED),
-        );
+        await expect(async () => await sut.changePassword({ id, password })).rejects.toThrow(new CoPangException(EXCEPTION_STATUS.USER_DELETED));
       });
 
       test('변경하고자 하는 비밀번호가 이전 비밀번호와 동일한 경우', async () => {
-        const accessToken = 'token';
+        const id = 1;
         const password = 'copang1234!';
 
         const givenUserInfo: UserInfo = {
@@ -403,7 +393,7 @@ describe('Buyer Service test  ', () => {
         passwordEncrypt.compare.mockResolvedValue(true);
         passwordEncrypt.encrypt.mockResolvedValue('password1234');
 
-        await expect(async () => await sut.changePassword({ accessToken: accessToken, password })).rejects.toThrow(
+        await expect(async () => await sut.changePassword({ id, password })).rejects.toThrow(
           new CoPangException(EXCEPTION_STATUS.USER_CHANGE_PASSWORD_SAME),
         );
       });
@@ -413,7 +403,7 @@ describe('Buyer Service test  ', () => {
   describe('구매자 닉네임 변경 기능 테스트 ', () => {
     describe('성공 케이스', () => {
       test('닉네임 변경이 성공한 케이스', async () => {
-        const accessToken = 'token';
+        const id = 1;
         const nickName = '코팡맨';
 
         const givenUserInfo: UserInfo = {
@@ -437,7 +427,7 @@ describe('Buyer Service test  ', () => {
 
         const buyerRepositoryChangeNickNameSpy = jest.spyOn(buyerRepository, 'changeNickName').mockResolvedValue(givenBuyer);
 
-        const result = await sut.changeNickName({ accessToken, nickName });
+        const result = await sut.changeNickName({ id, nickName });
 
         expect(buyerRepositoryChangeNickNameSpy).toHaveBeenCalled();
       });
@@ -445,7 +435,7 @@ describe('Buyer Service test  ', () => {
 
     describe('실패 케이스', () => {
       test('해당하는 id의 buyer 정보가 DB에 존재하지 않은 경우', async () => {
-        const accessToken = 'token';
+        const id = 1;
         const nickName = 'copang1234!';
 
         const givenUserInfo: UserInfo = {
@@ -456,13 +446,11 @@ describe('Buyer Service test  ', () => {
         loginToken.verifyByAccess.mockReturnValue(givenUserInfo);
         buyerRepository.findOne.mockResolvedValue(null);
 
-        await expect(async () => await sut.changeNickName({ accessToken, nickName })).rejects.toThrow(
-          new CoPangException(EXCEPTION_STATUS.USER_NOT_EXIST),
-        );
+        await expect(async () => await sut.changeNickName({ id, nickName })).rejects.toThrow(new CoPangException(EXCEPTION_STATUS.USER_NOT_EXIST));
       });
 
       test('변경하고자 하는 닉네임이 이미 사용하는 닉네임일 경우', async () => {
-        const accessToken = 'token';
+        const id = 1;
         const nickName = '동일한닉네임';
 
         const givenUserInfo: UserInfo = {
@@ -494,7 +482,7 @@ describe('Buyer Service test  ', () => {
         loginToken.verifyByAccess.mockReturnValue(givenUserInfo);
         buyerRepository.findOne.mockResolvedValueOnce(givenBuyer).mockResolvedValueOnce(otherBuyer);
 
-        await expect(async () => await sut.changeNickName({ accessToken, nickName })).rejects.toThrow(
+        await expect(async () => await sut.changeNickName({ id, nickName })).rejects.toThrow(
           new CoPangException(EXCEPTION_STATUS.USER_CHANGE_NICK_NAME_SAME),
         );
       });
@@ -504,7 +492,7 @@ describe('Buyer Service test  ', () => {
   describe('구매자 이메일 변경 기능 테스트 ', () => {
     describe('성공 케이스', () => {
       test('이메일 변경이 성공한 케이스', async () => {
-        const accessToken = 'token';
+        const id = 1;
         const email = 'test@email.com';
 
         const givenUserInfo: UserInfo = {
@@ -528,7 +516,7 @@ describe('Buyer Service test  ', () => {
 
         const buyerRepositoryChangeEmailSpy = jest.spyOn(buyerRepository, 'changeEmail').mockResolvedValue(givenBuyer);
 
-        const result = await sut.changeEmail({ accessToken, email });
+        const result = await sut.changeEmail({ id, email });
 
         expect(buyerRepositoryChangeEmailSpy).toHaveBeenCalled();
       });
@@ -536,7 +524,7 @@ describe('Buyer Service test  ', () => {
 
     describe('실패 케이스', () => {
       test('해당하는 id의 buyer 정보가 DB에 존재하지 않은 경우', async () => {
-        const accessToken = 'token';
+        const id = 1;
         const email = 'test@email.com';
 
         const givenUserInfo: UserInfo = {
@@ -547,11 +535,11 @@ describe('Buyer Service test  ', () => {
         loginToken.verifyByAccess.mockReturnValue(givenUserInfo);
         buyerRepository.findOne.mockResolvedValue(null);
 
-        await expect(async () => await sut.changeEmail({ accessToken, email })).rejects.toThrow(new CoPangException(EXCEPTION_STATUS.USER_NOT_EXIST));
+        await expect(async () => await sut.changeEmail({ id, email })).rejects.toThrow(new CoPangException(EXCEPTION_STATUS.USER_NOT_EXIST));
       });
 
       test('변경하고자 하는 이메일이 이미 사용중 인 경우', async () => {
-        const accessToken = 'token';
+        const id = 1;
         const email = 'test@email.com';
 
         const givenUserInfo: UserInfo = {
@@ -583,9 +571,7 @@ describe('Buyer Service test  ', () => {
         loginToken.verifyByAccess.mockReturnValue(givenUserInfo);
         buyerRepository.findOne.mockResolvedValueOnce(givenBuyer).mockResolvedValueOnce(otherBuyer);
 
-        await expect(async () => await sut.changeEmail({ accessToken, email })).rejects.toThrow(
-          new CoPangException(EXCEPTION_STATUS.USER_CHANGE_EMAIL_SAME),
-        );
+        await expect(async () => await sut.changeEmail({ id, email })).rejects.toThrow(new CoPangException(EXCEPTION_STATUS.USER_CHANGE_EMAIL_SAME));
       });
     });
   });
@@ -593,7 +579,7 @@ describe('Buyer Service test  ', () => {
   describe('구매자 핸드폰번호 변경 기능 테스트 ', () => {
     describe('성공 케이스', () => {
       test('핸드폰번호 변경이 성공한 케이스', async () => {
-        const accessToken = 'token';
+        const id = 1;
         const phoneNumber = '01012345678';
 
         const givenUserInfo: UserInfo = {
@@ -617,7 +603,7 @@ describe('Buyer Service test  ', () => {
 
         const buyerRepositoryChangePhoneNumberSpy = jest.spyOn(buyerRepository, 'changePhoneNumber').mockResolvedValue(givenBuyer);
 
-        const result = await sut.changePhoneNumber({ accessToken, phoneNumber });
+        const result = await sut.changePhoneNumber({ id, phoneNumber });
 
         expect(buyerRepositoryChangePhoneNumberSpy).toHaveBeenCalled();
       });
@@ -625,7 +611,7 @@ describe('Buyer Service test  ', () => {
 
     describe('실패 케이스', () => {
       test('해당하는 id의 buyer 정보가 DB에 존재하지 않은 경우', async () => {
-        const accessToken = 'token';
+        const id = 1;
         const phoneNumber = '01012345678';
 
         const givenUserInfo: UserInfo = {
@@ -636,13 +622,13 @@ describe('Buyer Service test  ', () => {
         loginToken.verifyByAccess.mockReturnValue(givenUserInfo);
         buyerRepository.findOne.mockResolvedValue(null);
 
-        await expect(async () => await sut.changePhoneNumber({ accessToken, phoneNumber })).rejects.toThrow(
+        await expect(async () => await sut.changePhoneNumber({ id, phoneNumber })).rejects.toThrow(
           new CoPangException(EXCEPTION_STATUS.USER_NOT_EXIST),
         );
       });
 
       test('변경하고자 하는 핸드폰번호가 이미 사용중 인 경우', async () => {
-        const accessToken = 'token';
+        const id = 1;
         const phoneNumber = '01012345678';
 
         const givenUserInfo: UserInfo = {
@@ -674,7 +660,7 @@ describe('Buyer Service test  ', () => {
         loginToken.verifyByAccess.mockReturnValue(givenUserInfo);
         buyerRepository.findOne.mockResolvedValueOnce(givenBuyer).mockResolvedValueOnce(otherBuyer);
 
-        await expect(async () => await sut.changePhoneNumber({ accessToken, phoneNumber })).rejects.toThrow(
+        await expect(async () => await sut.changePhoneNumber({ id, phoneNumber })).rejects.toThrow(
           new CoPangException(EXCEPTION_STATUS.USER_CHANGE_PHONE_NUMBER_SAME),
         );
       });

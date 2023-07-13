@@ -1,4 +1,4 @@
-import { Injectable, CanActivate, ExecutionContext, Inject } from '@nestjs/common';
+import { CanActivate, ExecutionContext, Inject, Injectable } from '@nestjs/common';
 import { ILoginToken } from '../domain/login.token';
 import { Request } from 'express';
 
@@ -10,7 +10,7 @@ export class AuthAuthorizationGuard implements CanActivate {
     const ctx = context.switchToHttp();
     const request = ctx.getRequest<Request>();
 
-    this.loginToken.verifyByAccess(request.get('Authorization').split(' ')[1] ?? '');
+    request.body.user = this.loginToken.verifyByAccess(request.get('Authorization').split(' ')[1] ?? '');
 
     return true;
   }

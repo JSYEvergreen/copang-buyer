@@ -77,9 +77,9 @@ export class BuyerService implements IBuyerService {
 
   async changePassword(changePasswordIn: BuyerChangePasswordIn) {
     const newPassword = changePasswordIn.password;
-    const tokenBuyer = this.loginToken.verifyByAccess(changePasswordIn.accessToken);
+    const buyerId = changePasswordIn.id;
 
-    const buyer = await this.buyerRepository.findOne({ id: tokenBuyer.id });
+    const buyer = await this.buyerRepository.findOne({ id: buyerId });
     if (!buyer) {
       throw new CoPangException(EXCEPTION_STATUS.USER_NOT_EXIST);
     }
@@ -99,9 +99,9 @@ export class BuyerService implements IBuyerService {
 
   async changeNickName(changeNickNameIn: BuyerChangeNickNameIn) {
     const changedNickName = changeNickNameIn.nickName;
-    const tokenBuyer = this.loginToken.verifyByAccess(changeNickNameIn.accessToken);
+    const buyerId = changeNickNameIn.id;
 
-    const buyer = await this.buyerRepository.findOne({ id: tokenBuyer.id });
+    const buyer = await this.buyerRepository.findOne({ id: buyerId });
 
     if (!buyer) {
       throw new CoPangException(EXCEPTION_STATUS.USER_NOT_EXIST);
@@ -112,15 +112,15 @@ export class BuyerService implements IBuyerService {
       throw new CoPangException(EXCEPTION_STATUS.USER_CHANGE_NICK_NAME_SAME);
     }
 
-    const changeBuyer = await this.buyerRepository.changeNickName({ id: buyer.id, nickName: changedNickName });
+    const changeBuyer = await this.buyerRepository.changeNickName({ id: buyerId, nickName: changedNickName });
     return changeBuyer;
   }
 
   async changeEmail(changeEmailIn: BuyerChangeEmailIn) {
     const changedEmail = changeEmailIn.email;
-    const tokenBuyer = this.loginToken.verifyByAccess(changeEmailIn.accessToken);
+    const buyerId = changeEmailIn.id;
 
-    const buyer = await this.buyerRepository.findOne({ id: tokenBuyer.id });
+    const buyer = await this.buyerRepository.findOne({ id: buyerId });
 
     if (!buyer) {
       throw new CoPangException(EXCEPTION_STATUS.USER_NOT_EXIST);
@@ -131,15 +131,15 @@ export class BuyerService implements IBuyerService {
       throw new CoPangException(EXCEPTION_STATUS.USER_CHANGE_EMAIL_SAME);
     }
 
-    const changeBuyer = await this.buyerRepository.changeEmail({ id: buyer.id, email: changedEmail });
+    const changeBuyer = await this.buyerRepository.changeEmail({ id: buyerId, email: changedEmail });
     return changeBuyer;
   }
 
   async changePhoneNumber(changePhoneNumber: BuyerChangePhoneNumberIn) {
     const changedPhoneNumber = changePhoneNumber.phoneNumber;
-    const tokenBuyer = this.loginToken.verifyByAccess(changePhoneNumber.accessToken);
+    const buyerId = changePhoneNumber.id;
 
-    const buyer = await this.buyerRepository.findOne({ id: tokenBuyer.id });
+    const buyer = await this.buyerRepository.findOne({ id: buyerId });
 
     if (!buyer) {
       throw new CoPangException(EXCEPTION_STATUS.USER_NOT_EXIST);
@@ -150,7 +150,7 @@ export class BuyerService implements IBuyerService {
       throw new CoPangException(EXCEPTION_STATUS.USER_CHANGE_PHONE_NUMBER_SAME);
     }
 
-    const changeBuyer = await this.buyerRepository.changePhoneNumber({ id: buyer.id, phoneNumber: changedPhoneNumber });
+    const changeBuyer = await this.buyerRepository.changePhoneNumber({ id: buyerId, phoneNumber: changedPhoneNumber });
     return changeBuyer;
   }
 }
