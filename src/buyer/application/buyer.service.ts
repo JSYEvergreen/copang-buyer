@@ -1,6 +1,6 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { IBuyerService } from '../domain/buyer.service';
-import { BuyerChangeNickNameIn, BuyerChangePasswordIn, BuyerLoginIn, BuyerSignUpIn } from '../domain/port/buyer.in';
+import { BuyerChangeEmailIn, BuyerChangeNickNameIn, BuyerChangePasswordIn, BuyerLoginIn, BuyerSignUpIn } from '../domain/port/buyer.in';
 import { IBuyerRepository } from '../domain/buyer.repository';
 import { BuyerSignUpOut } from '../domain/port/buyer.out';
 import { IPasswordEncrypt } from '../../auth/domain/password.encrypt';
@@ -114,6 +114,25 @@ export class BuyerService implements IBuyerService {
     }
 
     const changeBuyer = await this.buyerRepository.changeNickName({ id: buyer.id, nickName: changedNickName });
+    return changeBuyer;
+  }
+
+  async changeEmail(changeEmailIn: BuyerChangeEmailIn) {
+    const changedEmail = changeEmailIn.email;
+    const tokenBuyer = this.loginToken.verifyByAccess(changeEmailIn.accessToken);
+
+    const buyer = await this.buyerRepository.findOne({ id: tokenBuyer.id });
+
+    if (!buyer) {
+      throw new CoPangException(EXCEPTION_STATUS.USER_NOT_EXIST);
+    }
+
+    const duplicateEmailBuyer = await this.buyerRepository.findOne({ email: changedEmail });
+    if (duplicateEmailBuyer) {
+      throw new CoPangException(EXCEPTION_STATUS.USER_CHANGE_EMAIL_SAME);
+    }
+
+    const changeBuyer = await this.buyerRepository.changeEmail({ id: buyer.id, email: changedEmail });
     return changeBuyer;
   }
 }

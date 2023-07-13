@@ -16,3 +16,8 @@ export interface BuyerChangeNickNameOut {
   id: number;
   nickName: string;
 }
+
+export interface BuyerChangeEmailOut {
+  id: number;
+  email: string;
+}

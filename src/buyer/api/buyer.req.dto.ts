@@ -38,3 +38,9 @@ export class BuyerChangeNickNameReq {
   @IsNotEmpty()
   nickName: string;
 }
+
+export class BuyerChangeEmailReq {
+  @IsEmail()
+  @IsNotEmpty()
+  email: string;
+}
