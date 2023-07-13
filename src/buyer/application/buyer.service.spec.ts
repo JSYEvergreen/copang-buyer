@@ -409,4 +409,95 @@ describe('Buyer Service test  ', () => {
       });
     });
   });
+
+  describe('구매자 닉네임 변경 기능 테스트 ', () => {
+    describe('성공 케이스', () => {
+      test('닉네임 변경이 성공한 케이스', async () => {
+        const accessToken = 'token';
+        const nickName = '코팡맨';
+
+        const givenUserInfo: UserInfo = {
+          id: 1,
+          userId: 'copang',
+        };
+
+        const givenBuyer: Buyer = {
+          id: 1,
+          userId: 'copang',
+          password: testEncryptPassword,
+          name: '코팡맨',
+          nickName: '변경전코팡구매',
+          email: 'copang@copang.com',
+          phoneNumber: '01012345678',
+          deletedAt: null,
+        };
+
+        loginToken.verifyByAccess.mockReturnValue(givenUserInfo);
+        buyerRepository.findOne.mockResolvedValueOnce(givenBuyer).mockResolvedValueOnce(null);
+
+        const buyerRepositoryChangeNickNameSpy = jest.spyOn(buyerRepository, 'changeNickName').mockResolvedValue(givenBuyer);
+
+        const result = await sut.changeNickName({ accessToken, nickName });
+
+        expect(buyerRepositoryChangeNickNameSpy).toHaveBeenCalled();
+      });
+    });
+
+    describe('실패 케이스', () => {
+      test('해당하는 id의 buyer 정보가 DB에 존재하지 않은 경우', async () => {
+        const accessToken = 'token';
+        const nickName = 'copang1234!';
+
+        const givenUserInfo: UserInfo = {
+          id: 1,
+          userId: 'copang',
+        };
+
+        loginToken.verifyByAccess.mockReturnValue(givenUserInfo);
+        buyerRepository.findOne.mockResolvedValue(null);
+
+        await expect(async () => await sut.changeNickName({ accessToken, nickName })).rejects.toThrow(
+          new CoPangException(EXCEPTION_STATUS.USER_NOT_EXIST),
+        );
+      });
+
+      test('변경하고자 하는 닉네임이 이미 사용하는 닉네임일 경우', async () => {
+        const accessToken = 'token';
+        const nickName = '동일한닉네임';
+
+        const givenUserInfo: UserInfo = {
+          id: 1,
+          userId: 'copang',
+        };
+
+        const givenBuyer: Buyer = {
+          id: 1,
+          userId: 'copang',
+          password: testEncryptPassword,
+          name: '코팡맨',
+          nickName: '코팡구매',
+          email: 'copang@copang.com',
+          phoneNumber: '01012345678',
+          deletedAt: null,
+        };
+
+        const otherBuyer: Buyer = {
+          id: 2,
+          userId: 'copang',
+          password: testEncryptPassword,
+          name: '코팡맨',
+          nickName: '동일한닉네임',
+          email: 'copang@copang.com',
+          phoneNumber: '01012345678',
+          deletedAt: null,
+        };
+        loginToken.verifyByAccess.mockReturnValue(givenUserInfo);
+        buyerRepository.findOne.mockResolvedValueOnce(givenBuyer).mockResolvedValueOnce(otherBuyer);
+
+        await expect(async () => await sut.changeNickName({ accessToken, nickName })).rejects.toThrow(
+          new CoPangException(EXCEPTION_STATUS.USER_CHANGE_NICK_NAME_SAME),
+        );
+      });
+    });
+  });
 });

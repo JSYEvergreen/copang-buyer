@@ -11,3 +11,8 @@ export interface BuyerChangePasswordOut {
   id: number;
   password: string;
 }
+
+export interface BuyerChangeNickNameOut {
+  id: number;
+  nickName: string;
+}

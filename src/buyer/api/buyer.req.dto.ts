@@ -33,3 +33,8 @@ export class BuyerChangePasswordReq {
   @IsNotEmpty()
   password: string;
 }
+
+export class BuyerChangeNickNameReq {
+  @IsNotEmpty()
+  nickName: string;
+}

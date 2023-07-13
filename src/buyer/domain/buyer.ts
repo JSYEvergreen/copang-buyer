@@ -1,12 +1,14 @@
-export interface Buyer {
-  id: number;
-  userId: string;
-  password: string;
-  name: string;
-  nickName: string;
-  email: string;
-  phoneNumber: string;
-  deletedAt: Date | null;
+export class Buyer {
+  constructor(
+    public id: number,
+    public userId: string,
+    public password: string,
+    public name: string,
+    public nickName: string,
+    public email: string,
+    public phoneNumber: string,
+    public deletedAt: Date | null,
+  ) {}
 }
 
 export const formattingPhoneNumber = (phoneNumber: string) => {
