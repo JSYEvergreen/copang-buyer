@@ -67,7 +67,6 @@ export class BuyerController {
   }
 
   @Post('/buyer/change/password')
-  @UseGuards(AuthAuthorizationGuard)
   async changePassword(@Headers('Authorization') bearerToken: string, @Body() changePasswordReq: BuyerChangePasswordReq) {
     const accessToken = bearerToken.split(' ')[1];
     const response = await this.buyerService.changePassword({ accessToken, ...changePasswordReq });
