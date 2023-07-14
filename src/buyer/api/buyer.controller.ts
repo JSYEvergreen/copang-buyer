@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Headers, Inject, Param, Post, Req, UseGuards, UseInterceptors } from '@nestjs/common';
+import { Body, Controller, Get, Headers, Inject, Param, Post, UseGuards, UseInterceptors } from '@nestjs/common';
 import {
   BuyerChangeEmailReq,
   BuyerChangeNickNameReq,
@@ -11,7 +11,8 @@ import { TransformInterceptor } from '../../common/api/transform.interceptor';
 import { IBuyerService } from '../domain/buyer.service';
 import { BuyerLoginRes, BuyerSignUpRes } from './buyer.res.dto';
 import { AuthAuthorizationGuard } from '../../auth/api/auth.authorization.guard';
-import { Request } from 'express';
+import { UserInfo } from '../../auth/domain/login.token';
+import { Buyer } from './buyer-info.decorator';
 
 @Controller()
 @UseInterceptors(TransformInterceptor)
@@ -76,32 +77,32 @@ export class BuyerController {
 
   @Post('/buyer/change/password')
   @UseGuards(AuthAuthorizationGuard)
-  async changePassword(@Req() req: Request, @Body() changePasswordReq: BuyerChangePasswordReq) {
-    const id: number = req.body.user.id;
+  async changePassword(@Buyer() buyer: UserInfo, @Body() changePasswordReq: BuyerChangePasswordReq) {
+    const id: number = buyer.id;
 
     return await this.buyerService.changePassword({ id, ...changePasswordReq });
   }
 
   @Post('/buyer/change/nick-name')
   @UseGuards(AuthAuthorizationGuard)
-  async changeNickName(@Req() req: Request, @Body() nickNameReq: BuyerChangeNickNameReq) {
-    const id: number = req.body.user.id;
+  async changeNickName(@Buyer() buyer: UserInfo, @Body() nickNameReq: BuyerChangeNickNameReq) {
+    const id: number = buyer.id;
 
     return await this.buyerService.changeNickName({ id, ...nickNameReq });
   }
 
   @Post('/buyer/change/email')
   @UseGuards(AuthAuthorizationGuard)
-  async changeEmail(@Req() req: Request, @Body() emailReq: BuyerChangeEmailReq) {
-    const id: number = req.body.user.id;
+  async changeEmail(@Buyer() buyer: UserInfo, @Body() emailReq: BuyerChangeEmailReq) {
+    const id: number = buyer.id;
 
     return await this.buyerService.changeEmail({ id, ...emailReq });
   }
 
   @Post('/buyer/change/phone-number')
   @UseGuards(AuthAuthorizationGuard)
-  async changePhoneNumber(@Req() req: Request, @Body() phoneNumberReq: BuyerChangePhoneNumberReq) {
-    const id: number = req.body.user.id;
+  async changePhoneNumber(@Buyer() buyer: UserInfo, @Body() phoneNumberReq: BuyerChangePhoneNumberReq) {
+    const id: number = buyer.id;
 
     return await this.buyerService.changePhoneNumber({ id, ...phoneNumberReq });
   }
